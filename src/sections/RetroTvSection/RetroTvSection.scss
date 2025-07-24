@@ -1,0 +1,1090 @@
+.retro-tv-section {
+  //background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  background: #fffaf2;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 50px;
+  position: relative;
+  padding: 50px;
+  overflow: hidden;
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 120px;
+    z-index: 2;
+    position: relative;
+  }
+
+  .section-title {
+    margin-top: 120px;
+    font-weight: 500;
+    font-size: 60px;
+    line-height: 1.2;
+    color: #030e12;
+    letter-spacing: -0.5px;
+
+    .title-accent {
+      color: #484848;
+      font-weight: 400;
+    }
+  }
+
+  .ambient-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120%;
+    height: 120%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(ellipse at center,
+        rgba(255, 250, 242, 0.08) 0%,
+        rgba(3, 14, 18, 0.05) 40%,
+        transparent 70%);
+    z-index: 0;
+    animation: glowPulse 3s infinite ease-in-out;
+  }
+
+  .tv-container {
+    position: relative;
+    width: 600px;
+    height: 450px;
+    transform: perspective(1000px) rotateY(-2deg) rotateX(1deg);
+    z-index: 1;
+  }
+
+  .tv-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/tv.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .tv-screen {
+    position: absolute;
+    top: 49px;
+    left: 30px;
+    width: 450px;
+    height: 330px;
+    background: #000;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow:
+      inset 0 0 30px rgba(0, 0, 0, 0.9),
+      0 0 20px rgba(255, 250, 242, 0.3),
+      0 0 40px rgba(255, 250, 242, 0.15);
+    z-index: 1;
+    cursor: pointer;
+    transition: box-shadow 2s ease-in-out;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        repeating-linear-gradient(0deg,
+          transparent,
+          transparent 2px,
+          rgba(0, 0, 0, 0.1) 2px,
+          rgba(0, 0, 0, 0.1) 4px);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(ellipse at center,
+          transparent 40%,
+          rgba(0, 0, 0, 0.3) 100%),
+        linear-gradient(135deg,
+          rgba(255, 255, 255, 0.08) 0%,
+          transparent 30%,
+          transparent 70%,
+          rgba(255, 255, 255, 0.04) 100%);
+      z-index: 4;
+      pointer-events: none;
+    }
+  }
+
+  .video-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .retro-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter:
+      sepia(0.3) contrast(1.2) brightness(0.9) saturate(1.1);
+    animation: videoFlicker 0.15s infinite linear alternate;
+  }
+
+  .static-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+      radial-gradient(circle, transparent 1px, rgba(255, 255, 255, 0.15) 1px);
+    background-size: 4px 4px;
+    opacity: 0.1;
+    animation: staticNoise 0.1s infinite linear;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .glitch-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .glitch-line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.8);
+    opacity: 0;
+    animation: glitchMove 4s infinite linear;
+
+    &:nth-child(1) {
+      top: 20%;
+      animation-delay: 0s;
+    }
+
+    &:nth-child(2) {
+      top: 60%;
+      animation-delay: 1.5s;
+    }
+
+    &:nth-child(3) {
+      top: 80%;
+      animation-delay: 3s;
+    }
+  }
+
+  .tv-controls {
+    position: absolute;
+    right: 70px; // Позиция кнопок согласно PNG
+    top: 120px; // Позиция кнопок согласно PNG
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    z-index: 3;
+  }
+
+  .control-knob {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 30%,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(0, 0, 0, 0.1) 100%);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 15px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.8);
+      transform: translate(-50%, -50%);
+      border-radius: 2px;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+      background:
+        radial-gradient(circle at 30% 30%,
+          rgba(255, 255, 255, 0.4) 0%,
+          rgba(0, 0, 0, 0.2) 100%);
+    }
+
+
+    // Индикатор канала
+    .channel-indicator {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .channel-number {
+        color: #fff;
+        font-size: 10px;
+        font-weight: bold;
+        font-family: 'Courier New', monospace;
+      }
+    }
+  }
+
+  // Временные дисплеи в стилистике сайта
+  .volume-display,
+  .channel-display,
+  .audio-notification {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    animation: displayFadeInOut 1.5s ease-in-out;
+
+    .display-content,
+    .notification-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 250, 242, 0.95);
+      color: #030e12;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-family: 'Manrope', Helvetica;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 15px rgba(3, 14, 18, 0.2);
+      border: 1px solid rgba(3, 14, 18, 0.1);
+
+      .display-icon,
+      .notification-icon {
+        font-size: 14px;
+      }
+
+      .display-text,
+      .notification-text {
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .channel-display {
+    animation-duration: 2s;
+
+    .display-content {
+      background: rgba(72, 72, 72, 0.95);
+      color: #fffaf2;
+    }
+  }
+
+  .audio-notification {
+    animation-duration: 3s;
+
+    .notification-content {
+      background: rgba(3, 14, 18, 0.95);
+      color: #fffaf2;
+      border: 1px solid rgba(255, 250, 242, 0.2);
+    }
+  }
+
+  .power-led {
+    position: absolute;
+    right: 41px;
+    bottom: 88%;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #ff4444;
+    box-shadow: 0 0 15px #ff4444;
+    animation: powerBlink 2s infinite ease-in-out;
+    z-index: 3;
+  }
+
+  // Интерактивная подсказка
+  .interaction-hint {
+    position: absolute;
+    bottom: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+
+    .hint-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 250, 242, 0.95);
+      color: #030e12;
+      padding: 12px 20px;
+      border-radius: 5px;
+      font-family: 'Manrope', Helvetica;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 20px rgba(3, 14, 18, 0.15);
+      border: 1px solid rgba(3, 14, 18, 0.1);
+      animation: hintPulse 3s infinite ease-in-out;
+
+      .hint-icon {
+        font-size: 16px;
+        animation: pointingPulse 2s infinite ease-in-out;
+      }
+
+      .hint-text {
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+// Анимации
+
+@keyframes videoFlicker {
+  0% {
+    filter: sepia(0.3) contrast(1.2) brightness(0.9) saturate(1.1);
+    transform: translateX(0px);
+  }
+
+  100% {
+    filter: sepia(0.35) contrast(1.25) brightness(0.85) saturate(1.15);
+    transform: translateX(1px);
+  }
+}
+
+@keyframes staticNoise {
+  0% {
+    transform: translateX(0px) translateY(0px);
+  }
+
+  10% {
+    transform: translateX(-1px) translateY(-1px);
+  }
+
+  20% {
+    transform: translateX(1px) translateY(0px);
+  }
+
+  30% {
+    transform: translateX(0px) translateY(1px);
+  }
+
+  40% {
+    transform: translateX(-1px) translateY(-1px);
+  }
+
+  50% {
+    transform: translateX(1px) translateY(1px);
+  }
+
+  60% {
+    transform: translateX(0px) translateY(-1px);
+  }
+
+  70% {
+    transform: translateX(-1px) translateY(0px);
+  }
+
+  80% {
+    transform: translateX(1px) translateY(-1px);
+  }
+
+  90% {
+    transform: translateX(0px) translateY(1px);
+  }
+
+  100% {
+    transform: translateX(-1px) translateY(0px);
+  }
+}
+
+@keyframes glitchMove {
+
+  0%,
+  95% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+
+  96% {
+    opacity: 1;
+    transform: translateX(-100%);
+  }
+
+  97% {
+    opacity: 1;
+    transform: translateX(100%);
+  }
+
+  98% {
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+}
+
+@keyframes powerBlink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes glowPulse {
+
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+@keyframes displayFadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+
+  20%,
+  80% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+}
+
+@keyframes hintPulse {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.02);
+  }
+}
+
+@keyframes pointingPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+
+// Мобильная адаптация
+@media (max-width: 768px) {
+  .retro-tv-section {
+    padding: 20px;
+
+    .section-header {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 32px;
+      line-height: 1.3;
+      letter-spacing: -0.3px;
+
+      br {
+        display: none;
+      }
+
+      .title-accent {
+        display: block;
+        margin-top: 8px;
+      }
+    }
+
+    .tv-container {
+      width: 400px;
+      height: 300px;
+    }
+
+    .tv-screen {
+      top: 40px;
+      left: 40px;
+      width: 320px;
+      height: 180px;
+    }
+
+    .tv-controls {
+      right: 45px;
+      top: 80px;
+      gap: 20px;
+    }
+
+    .control-knob {
+      width: 30px;
+      height: 30px;
+
+      &::before {
+        width: 12px;
+        height: 2px;
+      }
+
+
+      .channel-indicator {
+        top: -25px;
+        width: 16px;
+        height: 16px;
+
+        .channel-number {
+          font-size: 8px;
+        }
+      }
+    }
+
+    .power-led {
+      right: 75px;
+      bottom: 50px;
+      width: 8px;
+      height: 8px;
+    }
+
+    .interaction-hint {
+      bottom: -60px;
+
+      .hint-content {
+        font-size: 12px;
+        padding: 10px 16px;
+        gap: 8px;
+
+        .hint-icon {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .retro-tv-section {
+    padding: 15px;
+
+    .section-header {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      line-height: 1.4;
+      letter-spacing: -0.2px;
+
+      .title-accent {
+        margin-top: 6px;
+        font-size: 22px;
+      }
+    }
+
+    .tv-container {
+      width: 320px;
+      height: 240px;
+    }
+
+    .tv-screen {
+      top: 32px;
+      left: 32px;
+      width: 256px;
+      height: 144px;
+    }
+
+    .tv-controls {
+      right: 36px;
+      top: 64px;
+      gap: 15px;
+    }
+
+    .control-knob {
+      width: 25px;
+      height: 25px;
+
+      &::before {
+        width: 10px;
+        height: 2px;
+      }
+
+
+      .channel-indicator {
+        top: -20px;
+        width: 14px;
+        height: 14px;
+
+        .channel-number {
+          font-size: 7px;
+        }
+      }
+    }
+
+    .power-led {
+      right: 60px;
+      bottom: 40px;
+      width: 6px;
+      height: 6px;
+    }
+
+    .interaction-hint {
+      bottom: -50px;
+
+      .hint-content {
+        font-size: 11px;
+        padding: 8px 12px;
+        gap: 6px;
+
+        .hint-icon {
+          font-size: 12px;
+        }
+
+        .hint-text {
+          font-size: 10px;
+        }
+      }
+    }
+  }
+}
+
+// FullHD 1920px - увеличение на 33%
+@media (min-width: 1920px) {
+  .retro-tv-section {
+    padding: 67px;
+    min-height: 120vh;
+    gap: 67px;
+
+    .section-header {
+      margin-bottom: 160px;
+    }
+
+    .section-title {
+      font-size: 80px;
+      line-height: 1.2;
+      letter-spacing: -0.67px;
+    }
+
+    .tv-container {
+      width: 800px;
+      height: 600px;
+      transform: perspective(1333px) rotateY(-2deg) rotateX(1deg);
+    }
+
+    .tv-screen {
+      top: 65px;
+      left: 40px;
+      width: 600px;
+      height: 440px;
+      border-radius: 13px;
+    }
+
+    .tv-controls {
+      right: 93px;
+      top: 160px;
+      gap: 40px;
+    }
+
+    .control-knob {
+      width: 53px;
+      height: 53px;
+
+      &::before {
+        width: 20px;
+        height: 4px;
+      }
+
+      .channel-indicator {
+        top: -40px;
+        width: 27px;
+        height: 27px;
+
+        .channel-number {
+          font-size: 13px;
+        }
+      }
+    }
+
+    .power-led {
+      right: 55px;
+      bottom: 88%;
+      width: 15px;
+      height: 15px;
+    }
+
+    .interaction-hint {
+      bottom: -107px;
+
+      .hint-content {
+        font-size: 19px;
+        padding: 16px 27px;
+        gap: 16px;
+        border-radius: 7px;
+
+        .hint-icon {
+          font-size: 21px;
+        }
+      }
+    }
+
+    .volume-display,
+    .channel-display,
+    .audio-notification {
+      top: 27px;
+
+      .display-content,
+      .notification-content {
+        padding: 11px 21px;
+        border-radius: 27px;
+        font-size: 19px;
+
+        .display-icon,
+        .notification-icon {
+          font-size: 19px;
+        }
+      }
+    }
+  }
+}
+
+// 2K 2560px - увеличение на 78%
+@media (min-width: 2560px) {
+  .retro-tv-section {
+    padding: 89px;
+    min-height: 160vh;
+    gap: 89px;
+
+    .section-header {
+      margin-bottom: 214px;
+    }
+
+    .section-title {
+      font-size: 107px;
+      line-height: 1.2;
+      letter-spacing: -0.89px;
+    }
+
+    .tv-container {
+      width: 1068px;
+      height: 801px;
+      transform: perspective(1780px) rotateY(-2deg) rotateX(1deg);
+    }
+
+    .tv-screen {
+      top: 87px;
+      left: 53px;
+      width: 801px;
+      height: 587px;
+      border-radius: 18px;
+    }
+
+    .tv-controls {
+      right: 125px;
+      top: 214px;
+      gap: 53px;
+    }
+
+    .control-knob {
+      width: 71px;
+      height: 71px;
+
+      &::before {
+        width: 27px;
+        height: 5px;
+      }
+
+      .channel-indicator {
+        top: -53px;
+        width: 36px;
+        height: 36px;
+
+        .channel-number {
+          font-size: 18px;
+        }
+      }
+    }
+
+    .power-led {
+      right: 73px;
+      bottom: 88%;
+      width: 20px;
+      height: 20px;
+    }
+
+    .interaction-hint {
+      bottom: -142px;
+
+      .hint-content {
+        font-size: 25px;
+        padding: 21px 36px;
+        gap: 21px;
+        border-radius: 9px;
+
+        .hint-icon {
+          font-size: 29px;
+        }
+      }
+    }
+
+    .volume-display,
+    .channel-display,
+    .audio-notification {
+      top: 36px;
+
+      .display-content,
+      .notification-content {
+        padding: 14px 29px;
+        border-radius: 36px;
+        font-size: 25px;
+
+        .display-icon,
+        .notification-icon {
+          font-size: 25px;
+        }
+      }
+    }
+  }
+}
+
+// Ultrawide 34" (3440px) - увеличение в 2.4 раза
+@media (min-width: 3440px) {
+  .retro-tv-section {
+    padding: 120px;
+    min-height: 216vh;
+    gap: 120px;
+
+    .section-header {
+      margin-bottom: 288px;
+    }
+
+    .section-title {
+      font-size: 144px;
+      line-height: 1.2;
+      letter-spacing: -1.2px;
+    }
+
+    .tv-container {
+      width: 1440px;
+      height: 1080px;
+      transform: perspective(2400px) rotateY(-2deg) rotateX(1deg);
+    }
+
+    .tv-screen {
+      top: 118px;
+      left: 72px;
+      width: 1080px;
+      height: 792px;
+      border-radius: 24px;
+    }
+
+    .tv-controls {
+      right: 168px;
+      top: 288px;
+      gap: 72px;
+    }
+
+    .control-knob {
+      width: 96px;
+      height: 96px;
+
+      &::before {
+        width: 36px;
+        height: 7px;
+      }
+
+      .channel-indicator {
+        top: -72px;
+        width: 48px;
+        height: 48px;
+
+        .channel-number {
+          font-size: 24px;
+        }
+      }
+    }
+
+    .power-led {
+      right: 98px;
+      bottom: 88%;
+      width: 26px;
+      height: 26px;
+    }
+
+    .interaction-hint {
+      bottom: -192px;
+
+      .hint-content {
+        font-size: 34px;
+        padding: 29px 48px;
+        gap: 29px;
+        border-radius: 12px;
+
+        .hint-icon {
+          font-size: 38px;
+        }
+      }
+    }
+
+    .volume-display,
+    .channel-display,
+    .audio-notification {
+      top: 48px;
+
+      .display-content,
+      .notification-content {
+        padding: 19px 38px;
+        border-radius: 48px;
+        font-size: 34px;
+
+        .display-icon,
+        .notification-icon {
+          font-size: 34px;
+        }
+      }
+    }
+  }
+}
+
+// Ultrawide 32" 4K (3840px) - увеличение в 2.67 раза
+@media (min-width: 3840px) {
+  .retro-tv-section {
+    padding: 134px;
+    min-height: 240vh;
+    gap: 134px;
+
+    .section-header {
+      margin-bottom: 320px;
+    }
+
+    .section-title {
+      font-size: 160px;
+      line-height: 1.2;
+      letter-spacing: -1.33px;
+    }
+
+    .tv-container {
+      width: 1602px;
+      height: 1202px;
+      transform: perspective(2670px) rotateY(-2deg) rotateX(1deg);
+    }
+
+    .tv-screen {
+      top: 131px;
+      left: 80px;
+      width: 1202px;
+      height: 881px;
+      border-radius: 27px;
+    }
+
+    .tv-controls {
+      right: 187px;
+      top: 320px;
+      gap: 80px;
+    }
+
+    .control-knob {
+      width: 107px;
+      height: 107px;
+
+      &::before {
+        width: 40px;
+        height: 8px;
+      }
+
+      .channel-indicator {
+        top: -80px;
+        width: 53px;
+        height: 53px;
+
+        .channel-number {
+          font-size: 27px;
+        }
+      }
+    }
+
+    .power-led {
+      right: 109px;
+      bottom: 88%;
+      width: 29px;
+      height: 29px;
+    }
+
+    .interaction-hint {
+      bottom: -214px;
+
+      .hint-content {
+        font-size: 37px;
+        padding: 32px 53px;
+        gap: 32px;
+        border-radius: 13px;
+
+        .hint-icon {
+          font-size: 43px;
+        }
+      }
+    }
+
+    .volume-display,
+    .channel-display,
+    .audio-notification {
+      top: 53px;
+
+      .display-content,
+      .notification-content {
+        padding: 21px 43px;
+        border-radius: 53px;
+        font-size: 37px;
+
+        .display-icon,
+        .notification-icon {
+          font-size: 37px;
+        }
+      }
+    }
+  }
+}

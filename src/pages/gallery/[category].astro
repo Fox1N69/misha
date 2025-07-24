@@ -1,0 +1,454 @@
+---
+import "../../layouts/global.css";
+import VideoPlayer from "../../components/VideoPlayer/VideoPlayer.astro";
+import fs from "fs";
+import path from "path";
+
+export async function getStaticPaths() {
+    return [
+        { params: { category: "weddings" } },
+        { params: { category: "corporate-events" } },
+        { params: { category: "private-events" } },
+        { params: { category: "standup" } },
+        { params: { category: "videos" } },
+        { params: { category: "all" } },
+    ];
+}
+
+const { category } = Astro.params;
+
+interface MediaItem {
+    src: string;
+    alt: string;
+    type: "image" | "video";
+    category: string;
+    description: string;
+    eventType?: string;
+    dateCreated?: string;
+}
+
+function getFilesFromDirectory(
+    dirPath: string,
+    extensions: string[],
+): string[] {
+    try {
+        const fullPath = path.join(process.cwd(), "public", dirPath);
+        if (!fs.existsSync(fullPath)) {
+            return [];
+        }
+
+        const files = fs.readdirSync(fullPath);
+        return files
+            .filter((file) => {
+                const ext = path.extname(file).toLowerCase();
+                return extensions.includes(ext);
+            })
+            .map((file) => `/${dirPath}/${file}`);
+    } catch (error) {
+        console.error(`Error reading directory ${dirPath}:`, error);
+        return [];
+    }
+}
+
+function getFilesFromSubdirectories(
+    basePath: string,
+    subdirs: string[],
+    extensions: string[],
+): { [key: string]: string[] } {
+    const result: { [key: string]: string[] } = {};
+
+    subdirs.forEach((subdir) => {
+        const fullPath = `${basePath}/${subdir}`;
+        result[subdir] = getFilesFromDirectory(fullPath, extensions);
+    });
+
+    return result;
+}
+
+const imageExtensions = [".png", ".jpg", ".jpeg", ".webp", ".gif"];
+const videoExtensions = [".mp4", ".webm", ".mov", ".avi"];
+
+const eventSubdirs = [
+    "standup",
+    "weddings",
+    "corporate-events",
+    "private-events",
+    "all",
+];
+
+const galleryFiles = getFilesFromSubdirectories(
+    "gallery",
+    eventSubdirs,
+    imageExtensions,
+);
+const videoFiles = getFilesFromDirectory("videos", videoExtensions);
+const standupImages = getFilesFromDirectory("standup", imageExtensions);
+const standupVideos = getFilesFromDirectory("standup", videoExtensions);
+
+function getEventTypeByCategory(category: string): string {
+    switch (category) {
+        case "weddings":
+            return "Свадьба";
+        case "corporate-events":
+            return "Корпоративное мероприятие";
+        case "private-events":
+            return "Частное мероприятие";
+        case "standup":
+            return "Стендап комедия";
+        case "videos":
+            return "Видео с мероприятий";
+        case "all":
+            return "Все мероприятия";
+        default:
+            return "Галерея";
+    }
+}
+
+const galleryMedia: MediaItem[] = [];
+Object.entries(galleryFiles).forEach(([cat, files]) => {
+    files.forEach((src, index) => {
+        galleryMedia.push({
+            src,
+            alt: `Фото ${getEventTypeByCategory(cat)} ${index + 1} - ведущий Михаил Колесников`,
+            type: "image" as const,
+            category: cat,
+            description: `Фотография с ${getEventTypeByCategory(cat).toLowerCase()}, демонстрирующая профессиональную работу ведущего`,
+            eventType: getEventTypeByCategory(cat),
+            dateCreated: new Date().toISOString(),
+        });
+    });
+});
+
+let allMedia: MediaItem[] = [];
+
+if (category === "standup") {
+    allMedia = [
+        ...standupImages.map((src, index) => ({
+            src,
+            alt: `Стендап выступление ${index + 1} - комедийное шоу Михаила Колесникова`,
+            type: "image" as const,
+            category: "standup",
+            description: `Фотография со стендап выступления - демонстрация комедийного мастерства`,
+            eventType: "Стендап комедия",
+            dateCreated: new Date().toISOString(),
+        })),
+        ...standupVideos.map((src, index) => ({
+            src,
+            alt: `Стендап видео ${index + 1} - комедийное выступление Михаила Колесникова`,
+            type: "video" as const,
+            category: "standup",
+            description: `Видеозапись стендап выступления - профессиональная комедия`,
+            eventType: "Стендап комедия",
+            dateCreated: new Date().toISOString(),
+        })),
+    ];
+} else if (category === "videos") {
+    allMedia = videoFiles.map((src, index) => ({
+        src,
+        alt: `Видео с мероприятия ${index + 1} - работа ведущего Михаила Колесникова`,
+        type: "video" as const,
+        category: "videos",
+        description: `Видеозапись профессиональной работы ведущего мероприятий`,
+        eventType: "Мероприятие",
+        dateCreated: new Date().toISOString(),
+    }));
+} else if (category === "all") {
+    allMedia = [
+        ...galleryMedia,
+        ...standupImages.map((src, index) => ({
+            src,
+            alt: `Стендап выступление ${index + 1} - комедийное шоу Михаила Колесникова`,
+            type: "image" as const,
+            category: "standup",
+            description: `Фотография со стендап выступления - демонстрация комедийного мастерства`,
+            eventType: "Стендап комедия",
+            dateCreated: new Date().toISOString(),
+        })),
+        ...standupVideos.map((src, index) => ({
+            src,
+            alt: `Стендап видео ${index + 1} - комедийное выступление Михаила Колесникова`,
+            type: "video" as const,
+            category: "standup",
+            description: `Видеозапись стендап выступления - профессиональная комедия`,
+            eventType: "Стендап комедия",
+            dateCreated: new Date().toISOString(),
+        })),
+        ...videoFiles.map((src, index) => ({
+            src,
+            alt: `Видео с мероприятия ${index + 1} - работа ведущего Михаила Колесникова`,
+            type: "video" as const,
+            category: "videos",
+            description: `Видеозапись профессиональной работы ведущего мероприятий`,
+            eventType: "Мероприятие",
+            dateCreated: new Date().toISOString(),
+        })),
+    ];
+} else {
+    allMedia = galleryMedia.filter((item) => item.category === category);
+}
+
+const categoryDisplayName = getEventTypeByCategory(category);
+---
+
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>
+            {categoryDisplayName} - Михаил Колесников | Ведущий мероприятий
+        </title>
+        <meta
+            name="description"
+            content={`Галерея работ ведущего Михаила Колесникова - фотографии и видео: ${categoryDisplayName.toLowerCase()}`}
+        />
+        <meta
+            name="keywords"
+            content={`ведущий мероприятий, Михаил Колесников, ${categoryDisplayName.toLowerCase()}, фото галерея, видео портфолио`}
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="canonical"
+            href={`https://misha-mc.ru/gallery/${category}`}
+        />
+        <meta
+            property="og:title"
+            content={`${categoryDisplayName} - Михаил Колесников | Ведущий мероприятий`}
+        />
+        <meta
+            property="og:description"
+            content={`Галерея работ ведущего Михаила Колесникова - фотографии и видео: ${categoryDisplayName.toLowerCase()}`}
+        />
+        <meta property="og:type" content="website" />
+        <meta
+            property="og:url"
+            content={`https://misha-mc.ru/gallery/${category}`}
+        />
+        <meta property="og:image" content="/person.png" />
+    </head>
+    <body>
+        <section class="full-gallery">
+            <div class="gallery-container">
+                <header class="gallery-header">
+                    <a href="/" class="back-button">← Назад</a>
+                    <h1>Галерея: {categoryDisplayName}</h1>
+                    <p class="gallery-subtitle">
+                        Фотографии и видео: {categoryDisplayName.toLowerCase()}
+                    </p>
+                </header>
+
+                <div class="masonry-grid">
+                    {
+                        allMedia.map((item, index) => (
+                            <figure
+                                class="masonry-item"
+                                data-category={item.category}
+                            >
+                                {item.type === "video" ? (
+                                    <VideoPlayer
+                                        src={item.src}
+                                        alt={item.alt}
+                                        className="masonry-media"
+                                    />
+                                ) : (
+                                    <img
+                                        src={item.src}
+                                        alt={item.alt}
+                                        class="masonry-media"
+                                        loading="lazy"
+                                    />
+                                )}
+                                <div class="media-overlay">
+                                    <span class="media-category">
+                                        {item.eventType}
+                                    </span>
+                                </div>
+                            </figure>
+                        ))
+                    }
+                </div>
+            </div>
+        </section>
+
+        <style>
+            .full-gallery {
+                min-height: 100vh;
+                background: linear-gradient(135deg, #fffaf2 0%, #f8f4e6 100%);
+                padding: 2rem 0;
+            }
+
+            .gallery-container {
+                max-width: 1600px;
+                margin: 0 auto;
+                padding: 0 2rem;
+            }
+
+            .gallery-header {
+                margin-bottom: 3rem;
+                text-align: center;
+            }
+
+            .back-button {
+                display: inline-block;
+                margin-bottom: 1rem;
+                padding: 0.75rem 1.5rem;
+                background: #030e12;
+                text-decoration: none;
+                color: #fffaf2;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                backdrop-filter: blur(10px);
+            }
+
+            .back-button:hover {
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            .gallery-header h1 {
+                font-size: 3rem;
+                font-weight: 800;
+                margin: 0;
+                color: #2c2c2c;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .gallery-subtitle {
+                font-size: 1.2rem;
+                color: #666;
+                margin: 0.5rem 0 0 0;
+            }
+
+            .masonry-grid {
+                columns: 1;
+                column-gap: 2rem;
+                orphans: 1;
+                widows: 1;
+            }
+
+            @media (min-width: 768px) {
+                .masonry-grid {
+                    columns: 2;
+                }
+            }
+
+            @media (min-width: 1024px) {
+                .masonry-grid {
+                    columns: 3;
+                }
+            }
+
+            @media (min-width: 1400px) {
+                .masonry-grid {
+                    columns: 4;
+                }
+            }
+
+            .masonry-item {
+                display: inline-block;
+                width: 100%;
+                margin-bottom: 2rem;
+                break-inside: avoid;
+                page-break-inside: avoid;
+                position: relative;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+                background: white;
+            }
+
+            .masonry-item:hover {
+                transform: translateY(-8px) scale(1.02);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            }
+
+            .masonry-media {
+                width: 100%;
+                height: auto;
+                display: block;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+
+            .masonry-item:hover .masonry-media {
+                transform: scale(1.05);
+            }
+
+            .media-overlay {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+                padding: 2rem 1.5rem 1.5rem;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .masonry-item:hover .media-overlay {
+                opacity: 1;
+            }
+
+            .media-category {
+                color: white;
+                font-size: 0.9rem;
+                font-weight: 600;
+                background: rgba(255, 255, 255, 0.2);
+                padding: 0.5rem 1rem;
+                border-radius: 8px;
+                backdrop-filter: blur(10px);
+            }
+
+            @media (max-width: 768px) {
+                .full-gallery {
+                    padding: 1rem 0;
+                }
+
+                .gallery-container {
+                    padding: 0 1rem;
+                }
+
+                .gallery-header {
+                    margin-bottom: 2rem;
+                }
+
+                .gallery-header h1 {
+                    font-size: 2rem;
+                }
+
+                .masonry-grid {
+                    columns: 1;
+                    column-gap: 1rem;
+                }
+
+                .masonry-item {
+                    margin-bottom: 1.5rem;
+                    border-radius: 8px;
+                }
+
+                .masonry-media {
+                    border-radius: 8px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .gallery-header h1 {
+                    font-size: 1.5rem;
+                }
+
+                .gallery-subtitle {
+                    font-size: 1rem;
+                }
+
+                .masonry-item {
+                    margin-bottom: 1rem;
+                }
+            }
+        </style>
+    </body>
+</html>

@@ -1,0 +1,47 @@
+---
+import "./Testimonials.scss";
+import type { Locale } from "../../i18n/translations";
+import { getTranslations } from "../../utils/i18n";
+
+interface Props {
+    locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+---
+
+<section class="testimonials-section">
+    <div class="testimonials-content">
+        <div class="section-header">
+            <h2 class="section-title">{t.testimonials.title}</h2>
+            <p class="section-subtitle">
+                {t.testimonials.subtitle}
+            </p>
+        </div>
+
+        <div class="testimonials-grid">
+            {
+                t.testimonials.reviews.map((review) => (
+                    <div class="testimonial-card">
+                        <div class="quote-mark">"</div>
+                        <div class="testimonial-text">{review.text}</div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                {review.author
+                                    .split(" ")
+                                    .map((word) => word[0])
+                                    .join("")}
+                            </div>
+                            <div class="author-info">
+                                <h4>{review.author}</h4>
+                                <p>{review.role}</p>
+                            </div>
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</section>
+

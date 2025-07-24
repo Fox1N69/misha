@@ -1,0 +1,205 @@
+---
+import "./CtaSection.scss";
+---
+
+<section class="cta">
+    <div class="cta__container">
+        <h2 class="cta__title">МИХАИЛ КОЛЕСНИКОВ</h2>
+        <div class="cta__content">
+            <form class="cta__form form">
+                <div class="form__inputs">
+                    <div class="form__input-group">
+                        <input
+                            type="text"
+                            class="form__input"
+                            placeholder="Ваше имя"
+                            id="name"
+                            name="name"
+                        />
+                    </div>
+                    <div class="form__input-group">
+                        <select
+                            class="form__input form__select"
+                            id="event"
+                            name="event"
+                        >
+                            <option value="" disabled selected
+                                >Мероприятие</option
+                            >
+                            <option value="wedding">Свадьба</option>
+                            <option value="corporate">Корпоратив</option>
+                            <option value="private">Частное мероприятие</option>
+                            <option value="standup">Стендап</option>
+                            <option value="other">Другое</option>
+                        </select>
+                    </div>
+                    <div class="form__input-group">
+                        <input
+                            type="text"
+                            class="form__input"
+                            placeholder="Город"
+                            id="city"
+                            name="city"
+                        />
+                    </div>
+                    <div class="form__input-group">
+                        <input
+                            type="tel"
+                            class="form__input form__input--phone"
+                            placeholder="+ 7 ___-___-__-__"
+                            id="phone"
+                            name="phone"
+                        />
+                    </div>
+                    <div class="form__input-group">
+                        <textarea
+                            class="form__input form__textarea"
+                            placeholder="Опишите мероприятие"
+                            id="about"
+                            name="about"
+                            rows="2"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="form__submit-btn">
+                    Отправить
+                </button>
+            </form>
+
+            <div class="cta__bottom">
+                <div class="cta__contacts contacts">
+                    <div class="contacts__info">
+                        <div class="contacts__item contacts__item--email">
+                            POCHTA@POCHTA.com
+                        </div>
+                        <div class="contacts__item contacts__item--phone">
+                            +7 ___-___-__-__
+                        </div>
+                    </div>
+
+                    <div class="contacts__social social">
+                        <a href="#" class="social__link social__link--whatsapp">
+                            <svg
+                                fill="#FFFFFF"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 50 50"
+                                class="social__icon social__icon--whatsapp"
+                                ><path
+                                    d="M25,2c12.703,0,23,10.297,23,23S37.703,48,25,48S2,37.703,2,25S12.297,2,25,2z M32.934,34.375	c0.423-1.298,2.405-14.234,2.65-16.783c0.074-0.772-0.17-1.285-0.648-1.514c-0.578-0.278-1.434-0.139-2.427,0.219	c-1.362,0.491-18.774,7.884-19.78,8.312c-0.954,0.405-1.856,0.847-1.856,1.487c0,0.45,0.267,0.703,1.003,0.966	c0.766,0.273,2.695,0.858,3.834,1.172c1.097,0.303,2.346,0.04,3.046-0.395c0.742-0.461,9.305-6.191,9.92-6.693	c0.614-0.502,1.104,0.141,0.602,0.644c-0.502,0.502-6.38,6.207-7.155,6.997c-0.941,0.959-0.273,1.953,0.358,2.351	c0.721,0.454,5.906,3.932,6.687,4.49c0.781,0.558,1.573,0.811,2.298,0.811C32.191,36.439,32.573,35.484,32.934,34.375z"
+                                ></path></svg
+                            >
+                            <span class="social__text">Telegram</span>
+                        </a>
+
+                        <a href="#" class="social__link social__link--whatsapp">
+                            <svg
+                                class="social__icon social__icon--whatsapp"
+                                viewBox="0 0 29 29"
+                            >
+                                <path
+                                    d="M14.5 0C6.49 0 0 6.49 0 14.5C0 17.18 0.74 19.69 2.03 21.85L0.7 26.1C0.57 26.48 0.69 26.9 0.99 27.15C1.17 27.29 1.4 27.36 1.63 27.36C1.74 27.36 1.85 27.34 1.96 27.3L6.37 25.99C8.44 27.16 10.83 27.82 13.36 27.82H14.5C22.51 27.82 29 21.33 29 13.32C29 5.31 22.51 0 14.5 0ZM21.46 19.78C21.1 20.77 19.69 21.57 18.73 21.78C18.07 21.93 17.23 22.05 14.5 21.04C10.93 19.71 8.63 16.05 8.45 15.81C8.28 15.57 7.03 13.88 7.03 12.13C7.03 10.38 7.9 9.52 8.28 9.12C8.66 8.72 9.15 8.6 9.38 8.6C9.61 8.6 9.84 8.61 10.04 8.62C10.25 8.63 10.54 8.55 10.82 9.25C11.1 9.95 11.78 11.7 11.86 11.88C11.94 12.06 12.02 12.3 11.88 12.54C11.74 12.78 11.66 12.9 11.48 13.11C11.3 13.32 11.14 13.48 10.96 13.71C10.8 13.91 10.62 14.13 10.82 14.49C11.02 14.85 11.77 16.04 12.87 16.99C14.26 18.22 15.4 18.57 15.78 18.75C16.16 18.93 16.42 18.89 16.62 18.66C16.82 18.43 17.48 17.67 17.72 17.31C17.96 16.95 18.2 17.01 18.54 17.15C18.88 17.29 20.61 18.14 20.99 18.33C21.37 18.52 21.63 18.61 21.71 18.79C21.79 18.97 21.79 19.67 21.46 19.78Z"
+                                ></path>
+                            </svg>
+                            <span class="social__text">WhatsApp</span>
+                        </a>
+                    </div>
+
+                    <div class="dby">
+                        <img
+                            src="your-icon.svg"
+                            alt="Brand Icon"
+                            style="width: 20px; height: 20px;"
+                        />
+                        <p class="dby__text">
+                            Designed & Developed by <a
+                                href="https://itugra.com"
+                                style="text-decoration: none; color: white;"
+                                >ITU</a
+                            >
+                        </p>
+                    </div>
+                </div>
+
+                <button class="cta__download-btn download-btn">
+                    скачать презентацию
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Form validation and submission
+    const form = document.querySelector(".cta__form") as HTMLFormElement;
+    const inputs = document.querySelectorAll(".form__input") as NodeListOf<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >;
+    const phoneInput = document.querySelector(
+        ".form__input--phone",
+    ) as HTMLInputElement;
+
+    // Phone mask functionality
+    phoneInput?.addEventListener("input", function (e: Event) {
+        const target = e.target as HTMLInputElement;
+        if (!target) return;
+
+        let value = target.value.replace(/\D/g, "");
+        if (value.startsWith("7")) {
+            value = value.substring(1);
+        }
+
+        let formattedValue = "+7 ";
+        if (value.length > 0) {
+            formattedValue += value.substring(0, 3);
+        }
+        if (value.length > 3) {
+            formattedValue += "-" + value.substring(3, 6);
+        }
+        if (value.length > 6) {
+            formattedValue += "-" + value.substring(6, 8);
+        }
+        if (value.length > 8) {
+            formattedValue += "-" + value.substring(8, 10);
+        }
+
+        target.value = formattedValue;
+    });
+
+    // Form submission
+    form?.addEventListener("submit", function (e: Event) {
+        e.preventDefault();
+
+        let allFilled = true;
+
+        inputs.forEach(
+            (
+                input:
+                    | HTMLInputElement
+                    | HTMLSelectElement
+                    | HTMLTextAreaElement,
+            ) => {
+                if (!input.value.trim()) {
+                    allFilled = false;
+                    input.classList.add("form__input--error");
+                } else {
+                    input.classList.remove("form__input--error");
+                }
+            },
+        );
+
+        if (allFilled) {
+            alert("Форма отправлена!");
+            form.reset();
+        } else {
+            alert("Пожалуйста, заполните все поля");
+        }
+    });
+
+    // Download button functionality
+    const downloadBtn = document.querySelector(
+        ".cta__download-btn",
+    ) as HTMLButtonElement;
+    downloadBtn?.addEventListener("click", function () {
+        alert("Презентация скачивается...");
+    });
+</script>

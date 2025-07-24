@@ -1,0 +1,207 @@
+---
+import "./FeaturesSection.scss";
+
+interface Feature {
+    id: string;
+    title: string;
+    description: string;
+    detailedDescription: string;
+    icon: string;
+    benefits: string[];
+    serviceType: string;
+}
+
+const features: Feature[] = [
+    {
+        id: "customer-satisfaction",
+        title: "Тысячи улыбок и положительных отзывов",
+        description: "Высочайший уровень удовлетворенности клиентов",
+        detailedDescription: "За 14 лет работы ведущим мероприятий получил тысячи положительных отзывов от довольных клиентов",
+        icon: "smile",
+        benefits: ["Позитивная атмосфера", "Довольные гости", "Положительная репутация", "Рекомендации клиентов"],
+        serviceType: "Клиентский сервис"
+    },
+    {
+        id: "worldwide-service",
+        title: "Работаю по всему миру",
+        description: "Международный опыт проведения мероприятий",
+        detailedDescription: "Оказываю услуги ведущего мероприятий не только в России, но и в странах СНГ и Европы",
+        icon: "world-map",
+        benefits: ["Международный опыт", "Готовность к командировкам", "Культурная адаптация", "Глобальное мышление"],
+        serviceType: "География услуг"
+    },
+    {
+        id: "multilingual",
+        title: "Веду мероприятия на русском и английском языках",
+        description: "Билингвальные услуги ведущего",
+        detailedDescription: "Профессионально веду мероприятия на русском и английском языках для международной аудитории",
+        icon: "flags",
+        benefits: ["Русский язык", "Английский язык", "Международная аудитория", "Переводческие навыки"],
+        serviceType: "Языковые навыки"
+    }
+];
+---
+
+<section 
+    class="features" 
+    itemscope 
+    itemtype="https://schema.org/Person"
+    role="region"
+    aria-labelledby="features-title"
+>
+    <div class="features__container">
+        <h2 
+            id="features-title"
+            class="features__title"
+            itemprop="hasOfferCatalog"
+            itemscope
+            itemtype="https://schema.org/OfferCatalog"
+        >
+            Что особенного
+            <meta itemprop="name" content="Уникальные особенности услуг Михаила Колесникова">
+            <meta itemprop="description" content="Преимущества и особенности работы профессионального ведущего мероприятий">
+        </h2>
+
+        <div 
+            class="features__grid"
+            itemscope
+            itemtype="https://schema.org/ItemList"
+            role="list"
+        >
+            <meta itemprop="name" content="Ключевые особенности услуг">
+            <meta itemprop="numberOfItems" content={features.length.toString()}>
+            
+            {features.map((feature, index) => (
+                <article 
+                    class={`features__item features__item--${feature.icon}`}
+                    itemprop="itemListElement"
+                    itemscope
+                    itemtype="https://schema.org/Service"
+                    role="listitem"
+                >
+                    <meta itemprop="name" content={feature.title}>
+                    <meta itemprop="description" content={feature.detailedDescription}>
+                    <meta itemprop="serviceType" content={feature.serviceType}>
+                    <meta itemprop="position" content={(index + 1).toString()}>
+                    
+                    <!-- Provider information -->
+                    <div itemprop="provider" itemscope itemtype="https://schema.org/Person" style="display: none;">
+                        <meta itemprop="name" content="Михаил Колесников">
+                        <meta itemprop="jobTitle" content="Ведущий мероприятий">
+                    </div>
+                    
+                    <!-- Service area -->
+                    <div itemprop="areaServed" itemscope itemtype="https://schema.org/Place" style="display: none;">
+                        <meta itemprop="name" content={feature.id === 'worldwide-service' ? 'Весь мир' : 'Россия и СНГ'}>
+                    </div>
+                    
+                    <header class="features__text-container">
+                        <h3 
+                            class="features__text"
+                            itemprop="headline"
+                            title={feature.detailedDescription}
+                        >
+                            {feature.title}
+                        </h3>
+                    </header>
+                    
+                    <div 
+                        class={`features__icon features__icon--${feature.icon}`}
+                        role="img"
+                        aria-label={`Иконка: ${feature.description}`}
+                        title={feature.description}
+                    ></div>
+                    
+                    <!-- Hidden benefits for SEO -->
+                    <div style="display: none;">
+                        {feature.benefits.map((benefit) => (
+                            <meta itemprop="offers" content={benefit}>
+                        ))}
+                    </div>
+                </article>
+            ))}
+        </div>
+    </div>
+    
+    <!-- JSON-LD структурированные данные для особенностей -->
+    <script type="application/ld+json" is:inline>
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Михаил Колесников",
+            "jobTitle": "Ведущий мероприятий",
+            "knowsLanguage": [
+                {
+                    "@type": "Language",
+                    "name": "Русский",
+                    "alternateName": "Russian"
+                },
+                {
+                    "@type": "Language", 
+                    "name": "Английский",
+                    "alternateName": "English"
+                }
+            ],
+            "serviceArea": [
+                {
+                    "@type": "Country",
+                    "name": "Россия"
+                },
+                {
+                    "@type": "Country",
+                    "name": "СНГ"
+                },
+                {
+                    "@type": "AdministrativeArea",
+                    "name": "Европа"
+                }
+            ],
+            "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Особенности услуг ведущего",
+                "itemListElement": [
+                    {
+                        "@type": "Offer",
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": "Услуги с высоким рейтингом клиентов",
+                            "description": "Тысячи положительных отзывов и довольных клиентов"
+                        },
+                        "review": {
+                            "@type": "AggregateRating",
+                            "ratingValue": "5.0",
+                            "bestRating": "5.0",
+                            "reviewCount": "1000+"
+                        }
+                    },
+                    {
+                        "@type": "Offer",
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": "Международные услуги ведущего",
+                            "description": "Работа по всему миру"
+                        },
+                        "areaServed": {
+                            "@type": "Place",
+                            "name": "Весь мир"
+                        }
+                    },
+                    {
+                        "@type": "Offer", 
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": "Билингвальные услуги ведущего",
+                            "description": "Мероприятия на русском и английском языках"
+                        },
+                        "inLanguage": ["ru", "en"]
+                    }
+                ]
+            },
+            "award": [
+                "Тысячи положительных отзывов",
+                "Международный опыт работы",
+                "Билингвальные навыки"
+            ]
+        }
+    </script>
+</section>

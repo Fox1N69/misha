@@ -1,0 +1,120 @@
+---
+import "./HeroMobile.scss";
+import type { Locale } from "../../i18n/translations";
+import { getTranslations } from "../../utils/i18n";
+
+interface Props {
+    locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+
+interface ServiceCategory {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+}
+
+const serviceCategories: ServiceCategory[] = [
+    {
+        id: 1,
+        name: t.services[0].name,
+        slug: "weddings",
+        description: t.services[0].description,
+    },
+    {
+        id: 2,
+        name: t.services[1].name,
+        slug: "corporate-events",
+        description: t.services[1].description,
+    },
+    {
+        id: 3,
+        name: t.services[2].name,
+        slug: "private-events",
+        description: t.services[2].description,
+    },
+    {
+        id: 4,
+        name: t.services[3].name,
+        slug: "standup",
+        description: t.services[3].description,
+    },
+];
+---
+
+<section
+    class="hero-section-mobile"
+    itemscope
+    itemtype="https://schema.org/Person"
+>
+    <div class="hero-mobile-container">
+        <div class="tagline">
+            <img
+                src="/type.svg"
+                alt={t.hero.taglineAlt}
+                width="300"
+                height="45"
+            />
+        </div>
+
+        <header class="header-section">
+            <h1 class="main-heading" itemprop="name">
+                {t.hero.mobileName}
+            </h1>
+
+            <!-- Hidden structured data -->
+            <meta itemprop="jobTitle" content={t.hero.metaJobTitle} />
+            <meta itemprop="description" content={t.hero.metaDescription} />
+            <meta
+                itemprop="url"
+                content={locale === "ru"
+                    ? "https://mikhailkolesnikov.ru"
+                    : "https://mikhailkolesnikov.ru/en"}
+            />
+
+            <nav
+                class="services-container"
+                role="navigation"
+                aria-label={t.hero.servicesLabel}
+            >
+                <div class="services-grid">
+                    {
+                        serviceCategories.map((service, index) => (
+                            <a
+                                href={`/gallery/${service.slug}`}
+                                class="service-text"
+                                itemprop="hasOfferCatalog"
+                                itemscope
+                                itemtype="https://schema.org/OfferCatalog"
+                                title={service.description}
+                                aria-label={service.description}
+                            >
+                                <meta itemprop="name" content={service.name} />
+                                <meta
+                                    itemprop="description"
+                                    content={service.description}
+                                />
+                                {service.name}
+                            </a>
+                        ))
+                    }
+                </div>
+            </nav>
+        </header>
+
+        <img
+            class="main-image"
+            alt={t.hero.mainImageAlt}
+            src="/person.png"
+            width="400"
+            height="533"
+            loading="eager"
+            itemprop="image"
+            fetchpriority="high"
+        />
+    </div>
+</section>
+

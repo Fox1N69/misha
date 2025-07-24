@@ -1,0 +1,250 @@
+---
+import "./AboutSection.scss";
+import type { Locale } from '../../i18n/translations';
+import { getTranslations } from '../../utils/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+
+interface ExperienceItem {
+    number: string;
+    unit: string;
+    subtitle: string;
+    description: string;
+    startDate?: string;
+    endDate?: string;
+    organization?: string;
+    position?: string;
+}
+
+const experienceItems: ExperienceItem[] = t.experience.map((item, index) => ({
+    number: item.number,
+    unit: item.unit,
+    subtitle: item.subtitle,
+    description: item.description,
+    ...(index === 0 && {
+        startDate: "1988-06-22",
+        endDate: new Date().toISOString().split("T")[0],
+        position: locale === 'ru' ? "Ведущий мероприятий" : "Event Host",
+    }),
+    ...(index === 1 && {
+        organization: locale === 'ru' ? "Радиостанция Европа Плюс" : "Europa Plus Radio Station",
+        position: locale === 'ru' ? "Радиоведущий" : "Radio Host",
+        startDate: "2014-02-01",
+        endDate: "2016-03-02",
+    }),
+    ...(index === 2 && {
+        position: locale === 'ru' ? "Ведущий новостей" : "News Anchor",
+        startDate: "2016-03-05",
+        endDate: "2018-03-10",
+    }),
+}));
+---
+
+<section
+    class="about-section"
+    itemscope
+    itemtype="https://schema.org/Person"
+    aria-labelledby="about-title"
+>
+    <div class="about-container">
+        <h2 id="about-title" class="about-title" itemprop="description">
+            {t.about.title}
+        </h2>
+
+        <!-- Hidden structured data for the person -->
+        <meta itemprop="name" content={t.about.metaName} />
+        <meta
+            itemprop="jobTitle"
+            content={t.about.metaJobTitle}
+        />
+        <meta
+            itemprop="description"
+            content={t.about.metaDescription}
+        />
+        <meta itemprop="url" content={locale === 'ru' ? "https://mikhailkolesnikov.ru" : "https://mikhailkolesnikov.ru/en"} />
+
+        <div class="about-content">
+            <!-- Portrait section with overlapping images -->
+            <figure
+                class="portrait-section"
+                itemprop="image"
+                itemscope
+                itemtype="https://schema.org/ImageObject"
+            >
+                <div class="images-container">
+                    <img
+                        class="trail-img trail-img--1"
+                        alt={t.about.trailAlt1}
+                        src="/about-trail3.png"
+                        role="presentation"
+                        width="200"
+                        height="150"
+                        loading="lazy"
+                    />
+                    <img
+                        class="trail-img trail-img--2"
+                        alt={t.about.trailAlt2}
+                        src="/about-trail2.png"
+                        role="presentation"
+                        width="200"
+                        height="150"
+                        loading="lazy"
+                    />
+                    <img
+                        class="trail-img trail-img--3"
+                        alt={t.about.trailAlt3}
+                        src="/about-trail1.png"
+                        role="presentation"
+                        width="200"
+                        height="150"
+                        loading="lazy"
+                    />
+                    <img
+                        class="portrait-img"
+                        alt={t.about.portraitAlt}
+                        src="/about-img.png"
+                        width="400"
+                        height="500"
+                        loading="lazy"
+                        itemprop="contentUrl"
+                    />
+                </div>
+                <meta
+                    itemprop="description"
+                    content={t.about.portraitAlt}
+                />
+                <meta itemprop="author" content={t.about.metaName} />
+            </figure>
+
+            <!-- Experience and button section -->
+            <div class="experience-section">
+                <div
+                    class="experience-items"
+                    itemscope
+                    itemtype="https://schema.org/Person"
+                    role="region"
+                    aria-label={t.about.experienceLabel}
+                >
+                    {
+                        experienceItems.map((item, index) => (
+                            <article
+                                class="experience-item"
+                                itemscope
+                                itemtype="https://schema.org/WorkHistory"
+                            >
+                                <header class="experience-number">
+                                    <span class="number" itemprop="duration">
+                                        {item.number}
+                                    </span>
+                                    <span class="unit">{item.unit}</span>
+                                </header>
+                                <div class="experience-details">
+                                    <h3 class="subtitle" itemprop="description">
+                                        {item.subtitle}
+                                    </h3>
+                                    <p class="description" itemprop="summary">
+                                        {item.description}
+                                    </p>
+
+                                    {/* Hidden structured data */}
+                                    {item.organization && (
+                                        <meta
+                                            itemprop="worksFor"
+                                            content={item.organization}
+                                        />
+                                    )}
+                                    {item.position && (
+                                        <meta
+                                            itemprop="jobTitle"
+                                            content={item.position}
+                                        />
+                                    )}
+                                    {item.startDate && (
+                                        <meta
+                                            itemprop="startDate"
+                                            content={item.startDate}
+                                        />
+                                    )}
+                                    {item.endDate && (
+                                        <meta
+                                            itemprop="endDate"
+                                            content={item.endDate}
+                                        />
+                                    )}
+                                </div>
+                            </article>
+                        ))
+                    }
+                </div>
+
+                <button
+                    class="download-button"
+                    type="button"
+                    aria-label={t.about.downloadButtonLabel}
+                    title={t.about.downloadButtonTitle}
+                >
+                    <span class="button-text">{t.about.downloadButtonText}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Structured data for skills and achievements -->
+    <script type="application/ld+json" is:inline set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": t.about.metaName,
+        "hasCredential": [
+            {
+                "@type": "EducationalOccupationalCredential",
+                "description": locale === 'ru' ? "14 лет опыта работы ведущим мероприятий" : "14 years of experience as event host",
+                "credentialCategory": locale === 'ru' ? "Профессиональный опыт" : "Professional experience"
+            },
+            {
+                "@type": "EducationalOccupationalCredential",
+                "description": locale === 'ru' ? "4 года работы на радиостанции Европа Плюс" : "4 years working at Europa Plus radio station",
+                "credentialCategory": locale === 'ru' ? "Медиа опыт" : "Media experience",
+                "educationalLevel": locale === 'ru' ? "Профессиональный" : "Professional"
+            },
+            {
+                "@type": "EducationalOccupationalCredential",
+                "description": locale === 'ru' ? "2 года ведения новостей в прямом эфире" : "2 years of live news broadcasting",
+                "credentialCategory": locale === 'ru' ? "Телевизионный опыт" : "Television experience"
+            }
+        ],
+        "knowsAbout": locale === 'ru' ? [
+            "Ведение свадебных церемоний",
+            "Организация корпоративных мероприятий",
+            "Частные праздники",
+            "Стендап комедия",
+            "Радиоведение",
+            "Телевизионное вещание",
+            "Публичные выступления",
+            "Работа с аудиторией"
+        ] : [
+            "Wedding ceremony hosting",
+            "Corporate event organization",
+            "Private celebrations",
+            "Stand-up comedy",
+            "Radio hosting",
+            "Television broadcasting",
+            "Public speaking",
+            "Audience engagement"
+        ],
+        "award": locale === 'ru' ? [
+            "14 лет успешной карьеры ведущего",
+            "Опыт работы на ведущей радиостанции",
+            "Профессиональный телевизионный опыт"
+        ] : [
+            "14 years of successful hosting career",
+            "Experience at leading radio station",
+            "Professional television experience"
+        ]
+    })}>
+    </script>
+</section>

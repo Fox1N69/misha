@@ -1,0 +1,237 @@
+---
+import "./AboutSection.scss";
+
+interface ExperienceItem {
+    number: string;
+    unit: string;
+    subtitle: string;
+    description: string;
+    startDate?: string;
+    endDate?: string;
+    organization?: string;
+    position?: string;
+}
+
+const experienceItems: ExperienceItem[] = [
+    {
+        number: "37",
+        unit: "ЛЕТ",
+        subtitle: "14 ИЗ НИХ НА СЦЕНЕ",
+        description: "Ведущий с живым умом и чувством такта",
+        startDate: "2010-01-01",
+        endDate: new Date().toISOString().split("T")[0],
+        position: "Ведущий мероприятий",
+    },
+    {
+        number: "5",
+        unit: "ГОДА",
+        subtitle: "РАДИОСТАНЦИЯ ЕВРОПА ПЛЮС",
+        description: "Хорошее настроение слушателей",
+        organization: "Радиостанция Европа Плюс",
+        position: "Радиоведущий",
+        startDate: "2018-01-01",
+        endDate: "2022-01-01",
+    },
+    {
+        number: "3",
+        unit: "ГОДА",
+        subtitle: "НОВОСТИ В ПРЯМОМ ЭФИРЕ",
+        description: "Всегда в курсе всех событий",
+        position: "Ведущий новостей",
+        startDate: "2020-01-01",
+        endDate: "2022-01-01",
+    },
+];
+---
+
+<section
+    class="about-section"
+    itemscope
+    itemtype="https://schema.org/Person"
+    aria-labelledby="about-title"
+>
+    <div class="about-container">
+        <h2 id="about-title" class="about-title" itemprop="description">
+            ОБО МНЕ ВКРАТЦЕ
+        </h2>
+
+        <!-- Hidden structured data for the person -->
+        <meta itemprop="name" content="Михаил Колесников" />
+        <meta
+            itemprop="jobTitle"
+            content="Ведущий мероприятий, Тамада, Ведущий, Радиоведущий"
+        />
+        <meta
+            itemprop="description"
+            content="Профессиональный ведущий с 14-летним опытом работы на сцене. Работал на радиостанции Европа Плюс и ведущим новостей в прямом эфире."
+        />
+        <meta itemprop="url" content="https://mikhailkolesnikov.ru" />
+
+        <div class="about-content">
+            <!-- Portrait section with overlapping images -->
+            <figure
+                class="portrait-section"
+                itemprop="image"
+                itemscope
+                itemtype="https://schema.org/ImageObject"
+            >
+                <div class="images-container">
+                    <img
+                        class="trail-img trail-img--1"
+                        alt="Декоративный элемент - художественный фотографии след 1"
+                        src="/about-trail3.png"
+                        role="presentation"
+                        width="200"
+                        height="150"
+                        loading="lazy"
+                    />
+                    <img
+                        class="trail-img trail-img--2"
+                        alt="Декоративный элемент - художественный фотографии след 2"
+                        src="/about-trail2.png"
+                        role="presentation"
+                        width="200"
+                        height="150"
+                        loading="lazy"
+                    />
+                    <img
+                        class="trail-img trail-img--3"
+                        alt="Декоративный элемент - художественный фотографии след 3"
+                        src="/about-trail1.png"
+                        role="presentation"
+                        width="200"
+                        height="150"
+                        loading="lazy"
+                    />
+                    <img
+                        class="portrait-img"
+                        alt="Профессиональный портрет Михаила Колесникова - ведущего мероприятий с многолетним опытом работы"
+                        src="/about-img.png"
+                        width="400"
+                        height="500"
+                        loading="lazy"
+                        itemprop="contentUrl"
+                    />
+                </div>
+                <meta
+                    itemprop="description"
+                    content="Профессиональный портрет Михаила Колесникова"
+                />
+                <meta itemprop="author" content="Михаил Колесников" />
+            </figure>
+
+            <!-- Experience and button section -->
+            <div class="experience-section">
+                <div
+                    class="experience-items"
+                    itemscope
+                    itemtype="https://schema.org/Person"
+                    role="region"
+                    aria-label="Профессиональный опыт"
+                >
+                    {
+                        experienceItems.map((item, index) => (
+                            <article
+                                class="experience-item"
+                                itemscope
+                                itemtype="https://schema.org/WorkHistory"
+                            >
+                                <header class="experience-number">
+                                    <span class="number" itemprop="duration">
+                                        {item.number}
+                                    </span>
+                                    <span class="unit">{item.unit}</span>
+                                </header>
+                                <div class="experience-details">
+                                    <h3 class="subtitle" itemprop="description">
+                                        {item.subtitle}
+                                    </h3>
+                                    <p class="description" itemprop="summary">
+                                        {item.description}
+                                    </p>
+
+                                    {/* Hidden structured data */}
+                                    {item.organization && (
+                                        <meta
+                                            itemprop="worksFor"
+                                            content={item.organization}
+                                        />
+                                    )}
+                                    {item.position && (
+                                        <meta
+                                            itemprop="jobTitle"
+                                            content={item.position}
+                                        />
+                                    )}
+                                    {item.startDate && (
+                                        <meta
+                                            itemprop="startDate"
+                                            content={item.startDate}
+                                        />
+                                    )}
+                                    {item.endDate && (
+                                        <meta
+                                            itemprop="endDate"
+                                            content={item.endDate}
+                                        />
+                                    )}
+                                </div>
+                            </article>
+                        ))
+                    }
+                </div>
+
+                <button
+                    class="download-button"
+                    type="button"
+                    aria-label="Скачать презентацию Михаила Колесникова с подробной информацией об услугах"
+                    title="Получите полную презентацию с портфолио и условиями сотрудничества"
+                >
+                    <span class="button-text">СКАЧАТЬ ПРЕЗЕНТАЦИЮ</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Дополнительные структурированные данные для навыков и достижений -->
+    <script type="application/ld+json" is:inline>
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Михаил Колесников",
+            "hasCredential": [
+                {
+                    "@type": "EducationalOccupationalCredential",
+                    "description": "14 лет опыта работы ведущим мероприятий",
+                    "credentialCategory": "Профессиональный опыт"
+                },
+                {
+                    "@type": "EducationalOccupationalCredential",
+                    "description": "4 года работы на радиостанции Европа Плюс",
+                    "credentialCategory": "Медиа опыт",
+                    "educationalLevel": "Профессиональный"
+                },
+                {
+                    "@type": "EducationalOccupationalCredential",
+                    "description": "2 года ведения новостей в прямом эфире",
+                    "credentialCategory": "Телевизионный опыт"
+                }
+            ],
+            "knowsAbout": [
+                "Ведение свадебных церемоний",
+                "Организация корпоративных мероприятий",
+                "Частные праздники",
+                "Стендап комедия",
+                "Радиоведение",
+                "Телевизионное вещание",
+                "Публичные выступления",
+                "Работа с аудиторией"
+            ],
+            "award": [
+                "14 лет успешной карьеры ведущего",
+                "Опыт работы на ведущей радиостанции",
+                "Профессиональный телевизионный опыт"
+            ]
+        }
+    </script>
+</section>

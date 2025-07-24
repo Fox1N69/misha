@@ -1,0 +1,163 @@
+---
+import "./FeaturesSection.scss";
+import type { Locale } from '../../i18n/translations';
+import { getTranslations } from '../../utils/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+const features = t.features.features;
+
+function format(str: string, vars: Record<string, string>) {
+  return str.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
+}
+---
+
+<section 
+    class="features" 
+    itemscope 
+    itemtype="https://schema.org/Person"
+    role="region"
+    aria-labelledby="features-title"
+>
+    <div class="features__container">
+        <h2 
+            id="features-title"
+            class="features__title"
+            itemprop="hasOfferCatalog"
+            itemscope
+            itemtype="https://schema.org/OfferCatalog"
+        >
+            {t.features.title}
+            <meta itemprop="name" content={t.features.metaName} />
+            <meta itemprop="description" content={t.features.metaDescription} />
+        </h2>
+
+        <div 
+            class="features__grid"
+            itemscope
+            itemtype="https://schema.org/ItemList"
+            role="list"
+        >
+            <meta itemprop="name" content={t.features.metaListName} />
+            <meta itemprop="numberOfItems" content={features.length.toString()} />
+            <meta itemprop="description" content={t.features.metaListDescription} />
+            {features.map((feature, index) => (
+                <article 
+                    class={`features__item features__item--${feature.icon}`}
+                    itemprop="itemListElement"
+                    itemscope
+                    itemtype="https://schema.org/Service"
+                    role="listitem"
+                >
+                    <meta itemprop="name" content={feature.title} />
+                    <meta itemprop="description" content={feature.detailedDescription} />
+                    <meta itemprop="serviceType" content={feature.serviceType} />
+                    <meta itemprop="position" content={(index + 1).toString()} />
+                    <!-- Provider information -->
+                    <div itemprop="provider" itemscope itemtype="https://schema.org/Person" style="display: none;">
+                        <meta itemprop="name" content={t.features.providerName} />
+                        <meta itemprop="jobTitle" content={t.features.providerJobTitle} />
+                    </div>
+                    <!-- Service area -->
+                    <div itemprop="areaServed" itemscope itemtype="https://schema.org/Place" style="display: none;">
+                        <meta itemprop="name" content={feature.id === 'worldwide-service' ? t.features.areaServedWorld : t.features.areaServedCIS} />
+                    </div>
+                    <header class="features__text-container">
+                        <h3 
+                            class="features__text"
+                            itemprop="headline"
+                            title={feature.detailedDescription}
+                        >
+                            {feature.title}
+                        </h3>
+                    </header>
+                    <div 
+                        class={`features__icon features__icon--${feature.icon}`}
+                        role="img"
+                        aria-label={format(t.features.ariaLabel, { description: feature.description })}
+                        title={feature.description}
+                    ></div>
+                    <!-- Hidden benefits for SEO -->
+                    <div style="display: none;">
+                        {feature.benefits.map((benefit) => (
+                            <meta itemprop="offers" content={benefit} />
+                        ))}
+                    </div>
+                </article>
+            ))}
+        </div>
+    </div>
+    <!-- JSON-LD структурированные данные для особенностей -->
+    <script type="application/ld+json" is:inline>
+        {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Person',
+            name: t.features.providerName,
+            jobTitle: t.features.providerJobTitle,
+            knowsLanguage: [
+                {
+                    '@type': 'Language',
+                    name: locale === 'ru' ? 'Русский' : 'Russian',
+                    alternateName: 'Russian'
+                },
+                {
+                    '@type': 'Language',
+                    name: locale === 'ru' ? 'Английский' : 'English',
+                    alternateName: 'English'
+                }
+            ],
+            serviceArea: [
+                {
+                    '@type': 'Country',
+                    name: t.features.areaServedCIS
+                },
+                {
+                    '@type': 'Country',
+                    name: t.features.areaServedWorld
+                },
+                {
+                    '@type': 'AdministrativeArea',
+                    name: t.features.areaServedEurope
+                }
+            ],
+            hasOfferCatalog: {
+                '@type': 'OfferCatalog',
+                name: t.features.jsonldCatalogName,
+                description: t.features.jsonldCatalogDescription,
+                itemListElement: t.features.jsonldOffers.map((offer) => {
+                    const base = {
+                        '@type': 'Offer',
+                        itemOffered: {
+                            '@type': 'Service',
+                            name: offer.name,
+                            description: offer.description
+                        }
+                    };
+                    if (offer.ratingValue) {
+                        base.review = {
+                            '@type': 'AggregateRating',
+                            ratingValue: offer.ratingValue,
+                            bestRating: offer.bestRating,
+                            reviewCount: offer.reviewCount
+                        };
+                    }
+                    if (offer.areaServed) {
+                        base.areaServed = {
+                            '@type': 'Place',
+                            name: offer.areaServed
+                        };
+                    }
+                    if (offer.inLanguage) {
+                        base.inLanguage = offer.inLanguage;
+                    }
+                    return base;
+                })
+            },
+            award: t.features.jsonldAwards
+        })}
+    </script>
+</section> 

@@ -1,0 +1,211 @@
+---
+import "./ClientSection.scss";
+import type { Locale } from '../../i18n/translations';
+import { getTranslations } from '../../utils/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+const clients = t.clients.clients;
+
+function format(str: string, vars: Record<string, string>) {
+  return str.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
+}
+---
+
+<section
+    class="clients"
+    role="region"
+    aria-labelledby="clients-title"
+    itemscope
+    itemtype="https://schema.org/Person"
+>
+    <div class="clients__container">
+        <header class="clients__header">
+            <h2
+                class="clients__title"
+                id="clients-title"
+                itemprop="hasCredential"
+                itemscope
+                itemtype="https://schema.org/EducationalOccupationalCredential"
+            >
+                {t.clients.title}
+                <meta
+                    itemprop="credentialCategory"
+                    content={t.clients.meta.credentialCategory}
+                />
+                <meta
+                    itemprop="description"
+                    content={t.clients.meta.description}
+                />
+            </h2>
+            <p class="clients__subtitle" itemprop="description">
+                {t.clients.subtitle}
+            </p>
+        </header>
+
+        <div
+            class="clients__marquee-container"
+            itemscope
+            itemtype="https://schema.org/ItemList"
+        >
+            <meta
+                itemprop="name"
+                content={t.clients.meta.listName}
+            />
+            <meta
+                itemprop="description"
+                content={t.clients.meta.listDescription}
+            />
+            <meta
+                itemprop="numberOfItems"
+                content={clients.length.toString()}
+            />
+
+            <ul class="clients__list" role="list">
+                {clients.map((client, index) => (
+                    <li
+                        class="clients__item"
+                        itemprop="itemListElement"
+                        itemscope
+                        itemtype="https://schema.org/Organization"
+                    >
+                        <a
+                            href={`#${client.id}`}
+                            class="clients__logo"
+                            aria-label={format(t.clients.ariaLabel, { name: client.name, description: client.description })}
+                            title={format(t.clients.titleTemplate, { name: client.name, industry: client.industry, description: client.description })}
+                            itemprop="url"
+                        >
+                            <span itemprop="name">
+                                {client.displayName}
+                            </span>
+                            <meta
+                                itemprop="description"
+                                content={client.description}
+                            />
+                            <meta
+                                itemprop="industry"
+                                content={client.industry}
+                            />
+                            {client.website && (
+                                <meta
+                                    itemprop="sameAs"
+                                    content={client.website}
+                                />
+                            )}
+                            <meta
+                                itemprop="position"
+                                content={(index + 1).toString()}
+                            />
+                        </a>
+                    </li>
+                ))}
+                {/* Дублированный набор для бесшовной анимации */}
+                {clients.map((client) => (
+                    <li class="clients__item" aria-hidden="true">
+                        <a
+                            href={`#${client.id}`}
+                            class="clients__logo"
+                            aria-label={format(t.clients.ariaLabel, { name: client.name, description: client.description })}
+                            title={format(t.clients.titleTemplate, { name: client.name, industry: client.industry, description: client.description })}
+                            tabindex="-1"
+                        >
+                            {client.displayName}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </div>
+
+    {/* Скрытые микроданные для каждого клиента */}
+    <div style="display: none;">
+        {clients.map((client) => (
+            <div
+                itemscope
+                itemtype="https://schema.org/WorkPerformed"
+                id={`work-${client.id}`}
+            >
+                <meta
+                    itemprop="name"
+                    content={format(t.clients.workExampleName, { name: client.name })}
+                />
+                <meta itemprop="description" content={format(t.clients.workExampleDescription, { description: client.description })} />
+                <div
+                    itemprop="agent"
+                    itemscope
+                    itemtype="https://schema.org/Person"
+                >
+                    <meta itemprop="name" content="Михаил Колесников" />
+                    <meta
+                        itemprop="jobTitle"
+                        content={locale === 'ru' ? 'Ведущий мероприятий' : 'Event Host'}
+                    />
+                </div>
+                <div
+                    itemprop="object"
+                    itemscope
+                    itemtype="https://schema.org/Organization"
+                >
+                    <meta itemprop="name" content={client.name} />
+                    <meta itemprop="industry" content={client.industry} />
+                    {client.website && (
+                        <meta itemprop="url" content={client.website} />
+                    )}
+                </div>
+                {client.projects &&
+                    client.projects.map((project) => (
+                        <meta itemprop="result" content={project} />
+                    ))}
+            </div>
+        ))}
+    </div>
+
+    {/* JSON-LD структурированные данные для клиентов */}
+    <script type="application/ld+json" is:inline>
+        {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Person',
+            name: 'Михаил Колесников',
+            jobTitle: locale === 'ru' ? 'Ведущий мероприятий' : 'Event Host',
+            hasOfferCatalog: {
+                '@type': 'OfferCatalog',
+                name: t.clients.meta.offerCatalogName,
+                description: t.clients.meta.offerCatalogDescription,
+                itemListElement: [
+                    {
+                        '@type': 'Offer',
+                        itemOffered: {
+                            '@type': 'Service',
+                            name: t.clients.meta.offerName,
+                            description: t.clients.meta.offerDescription
+                        },
+                        eligibleCustomerType: {
+                            '@type': 'BusinessEntityType',
+                            name: t.clients.meta.eligibleCustomerType
+                        }
+                    }
+                ]
+            },
+            workExample: clients.slice(0, 3).map((client) => ({
+                '@type': 'CreativeWork',
+                name: format(t.clients.workExampleName, { name: client.name }),
+                description: format(t.clients.workExampleDescription, { description: client.description }),
+                genre: client.industry,
+                creator: {
+                    '@type': 'Person',
+                    name: 'Михаил Колесников'
+                }
+            })),
+            alumniOf: clients.slice(0, 3).map((client) => ({
+                '@type': 'Organization',
+                name: client.name,
+                description: format(t.clients.alumniOfDescription, { description: client.description })
+            }))
+        })}
+    </script>
+</section> 

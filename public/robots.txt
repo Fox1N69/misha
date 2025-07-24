@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://mikhailkolesnikov.ru/sitemap-index.xml
+Sitemap: https://mikhailkolesnikov.ru/sitemap-0.xml
+
+# Allow search engines to crawl all content
+Allow: /person.png
+Allow: /type.svg
+Allow: /*.css
+Allow: /*.js
+
+# Security
+Disallow: /api/
+Disallow: /.env
+Disallow: /admin/
+
+# Performance
+Crawl-delay: 1

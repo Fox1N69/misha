@@ -1,0 +1,390 @@
+.hero-section {
+  background-color: #fffaf2;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+
+  .container {
+    position: relative;
+    width: 100%;
+    max-width: 1440px;
+    min-height: 100vh;
+    min-height: clamp(800px, 100vh, 1200px);
+
+    .content-wrapper {
+      position: relative;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
+      width: 100%;
+      max-width: 1356px;
+      height: 100%;
+
+      .tagline {
+        position: absolute;
+        width: 263px;
+        bottom: 87px;
+        left: 0;
+        font-family: 'Manrope', Helvetica;
+        font-weight: 500;
+        color: #303030;
+        font-size: 1.875rem;
+        line-height: 30px;
+      }
+
+      .main-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        .header-section {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          align-items: center;
+          gap: 25px;
+          position: absolute;
+          top: 68px;
+          left: 0;
+
+          .main-heading {
+            position: relative;
+            align-self: stretch;
+            height: 8rem;
+            margin-top: -1px;
+            font-family: 'Manrope', Helvetica;
+            font-weight: 500;
+            color: #030e12;
+            font-size: 120px;
+            line-height: normal;
+            white-space: nowrap;
+
+            .desktop-heading {
+              display: inline;
+            }
+
+            .mobile-heading {
+              display: none;
+            }
+          }
+
+          .services-container {
+            display: flex;
+            width: 100%;
+            max-width: 1344px;
+            align-items: center;
+            justify-content: space-between;
+
+            .left-services {
+              display: flex;
+              align-items: center;
+              gap: 41px;
+
+              .service-text {
+                font-family: 'Manrope', Helvetica;
+                font-weight: 500;
+                color: #484848;
+                font-size: 1.875rem;
+                text-decoration: none;
+                transition: color 0.3s ease, transform 0.3s ease;
+                
+                &:hover {
+                  color: #2c2c2c;
+                  transform: translateY(-2px);
+                }
+              }
+
+              .separator {
+                width: 0.5rem;
+                height: 0.5rem;
+                background-color: #484848;
+                border-radius: 50%;
+              }
+            }
+
+            .right-services {
+              display: flex;
+              align-items: center;
+              gap: 34px;
+
+              .service-text {
+                font-family: 'Manrope', Helvetica;
+                font-weight: 500;
+                color: #484848;
+                font-size: 1.875rem;
+                text-decoration: none;
+                transition: color 0.3s ease, transform 0.3s ease;
+                
+                &:hover {
+                  color: #2c2c2c;
+                  transform: translateY(-2px);
+                }
+              }
+
+              .separator {
+                width: 0.5rem;
+                height: 0.5rem;
+                background-color: #484848;
+                border-radius: 50%;
+              }
+            }
+          }
+        }
+
+        .main-image {
+          position: absolute;
+          width: 545px;
+          height: 100%;
+          top: 0;
+          left: 34.25%;
+          transform: translateX(-70px);
+          object-fit: cover;
+        }
+      }
+    }
+  }
+
+  // FullHD 1920px - увеличение на 33%
+  @media (min-width: 1920px) {
+    .container {
+      max-width: 1920px;
+      min-height: 100vh;
+      min-height: clamp(1064px, 100vh, 1400px);
+
+      .content-wrapper {
+        max-width: 1808px;
+        padding-left: 3.33rem;
+        padding-right: 3.33rem;
+
+        .tagline {
+          width: 350px;
+          bottom: 116px;
+          font-size: 2.5rem;
+          line-height: 40px;
+        }
+
+        .main-content {
+          .header-section {
+            gap: 33px;
+            top: 125px;
+
+            .main-heading {
+              height: 10.64rem;
+              font-size: 160px;
+            }
+
+            .services-container {
+              max-width: 1792px;
+
+              .left-services {
+                gap: 55px;
+
+                .service-text {
+                  font-size: 2.5rem;
+                }
+              }
+
+              .right-services {
+                gap: 45px;
+
+                .service-text {
+                  font-size: 2.5rem;
+                }
+              }
+            }
+          }
+
+          .main-image {
+            width: 725px;
+            height: 100%;
+            transform: translateX(-93px);
+          }
+        }
+      }
+    }
+  }
+
+  // 2K 2560px - увеличение на 78%
+  @media (min-width: 2560px) {
+    .container {
+      max-width: 2560px;
+      min-height: 100vh;
+      min-height: clamp(1424px, 100vh, 1800px);
+
+      .content-wrapper {
+        max-width: 2412px;
+        padding-left: 4.45rem;
+        padding-right: 4.45rem;
+
+        .tagline {
+          width: 468px;
+          bottom: 155px;
+          font-size: 3.34rem;
+          line-height: 53px;
+        }
+
+        .main-content {
+          .header-section {
+            gap: 44px;
+            top: 121px;
+
+            .main-heading {
+              height: 14.24rem;
+              font-size: 214px;
+            }
+
+            .services-container {
+              max-width: 2393px;
+
+              .left-services {
+                gap: 73px;
+
+                .service-text {
+                  font-size: 3.34rem;
+                }
+              }
+
+              .right-services {
+                gap: 60px;
+
+                .service-text {
+                  font-size: 3.34rem;
+                }
+              }
+            }
+          }
+
+          .main-image {
+            width: 970px;
+            height: 100%;
+            transform: translateX(-125px);
+          }
+        }
+      }
+    }
+  }
+
+
+  // Ultrawide 34" (3440px) - увеличение в 2.4 раза
+  @media (min-width: 3440px) {
+    .container {
+      max-width: 3440px;
+      min-height: 100vh;
+      min-height: clamp(1920px, 100vh, 2400px);
+
+      .content-wrapper {
+        max-width: 3254px;
+        padding-left: 6rem;
+        padding-right: 6rem;
+
+        .tagline {
+          width: 631px;
+          bottom: 209px;
+          font-size: 4.5rem;
+          line-height: 72px;
+        }
+
+        .main-content {
+          .header-section {
+            gap: 60px;
+            top: 163px;
+
+            .main-heading {
+              height: 19.2rem;
+              font-size: 288px;
+            }
+
+            .services-container {
+              max-width: 3226px;
+
+              .left-services {
+                gap: 98px;
+
+                .service-text {
+                  font-size: 4.5rem;
+                }
+              }
+
+              .right-services {
+                gap: 82px;
+
+                .service-text {
+                  font-size: 4.5rem;
+                }
+              }
+            }
+          }
+
+          .main-image {
+            width: 1308px;
+            height: 100%;
+            transform: translateX(-168px);
+          }
+        }
+      }
+    }
+  }
+
+  // Ultrawide 32" 4K (3840px) - увеличение в 2.67 раза
+  @media (min-width: 3840px) {
+    .container {
+      max-width: 3840px;
+      min-height: 100vh;
+      min-height: clamp(2137px, 100vh, 2600px);
+
+      .content-wrapper {
+        max-width: 3620px;
+        padding-left: 6.67rem;
+        padding-right: 6.67rem;
+
+        .tagline {
+          width: 702px;
+          bottom: 232px;
+          font-size: 5rem;
+          line-height: 80px;
+        }
+
+        .main-content {
+          .header-section {
+            gap: 67px;
+            top: 182px;
+
+            .main-heading {
+              height: 21.33rem;
+              font-size: 320px;
+            }
+
+            .services-container {
+              max-width: 3592px;
+
+              .left-services {
+                gap: 109px;
+
+                .service-text {
+                  font-size: 5rem;
+                }
+              }
+
+              .right-services {
+                gap: 91px;
+
+                .service-text {
+                  font-size: 5rem;
+                }
+              }
+            }
+          }
+
+          .main-image {
+            width: 1455px;
+            height: 100%;
+            transform: translateX(-187px);
+          }
+        }
+      }
+    }
+  }
+}

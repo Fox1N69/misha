@@ -1,0 +1,67 @@
+---
+import I18nLayout from "../../layouts/I18nLayout.astro";
+
+import HeroI18n from "../../sections/HeroSection/HeroI18n.astro";
+import HeroMobileI18n from "../../sections/HeroSection/HeroMobileI18n.astro";
+import AboutI18n from "../../sections/AboutSection/AboutI18n.astro";
+import ClientSectionI18n from "../../sections/ClientsSection/ClientSectionI18n.astro";
+import TestimonialsI18n from "../../sections/Testimonials/TestimonialsI18n.astro";
+import FeaturesSectionI18n from "../../sections/FeaturesSection/FeaturesSectionI18n.astro";
+import RetroTvSectionI18n from "../../sections/RetroTvSection/RetroTvSectionI18n.astro";
+import GallerySectionI18n from "../../sections/GallerySection/GallerySectionI18n.astro";
+import CtaSectionI18n from "../../sections/CtaSection/CtaSectionI18n.astro";
+
+// Force English locale for this page
+const locale = "en" as const;
+---
+
+<I18nLayout locale={locale}>
+    <!-- Desktop Hero Section -->
+    <div class="hero-desktop">
+        <HeroI18n locale={locale} />
+    </div>
+
+    <!-- Mobile Hero Section -->
+    <div class="hero-mobile-wrapper">
+        <HeroMobileI18n locale={locale} />
+    </div>
+
+    <AboutI18n locale={locale} />
+    <ClientSectionI18n locale={locale} />
+    <FeaturesSectionI18n locale={locale} />
+    <TestimonialsI18n locale={locale} />
+    <RetroTvSectionI18n locale={locale} />
+    <GallerySectionI18n locale={locale} />
+    <CtaSectionI18n locale={locale} />
+</I18nLayout>
+
+<style>
+    .hero-desktop {
+        display: block;
+    }
+
+    .hero-mobile-wrapper {
+        display: none;
+    }
+
+    @media (max-width: 768px) {
+        .hero-desktop {
+            display: none !important;
+        }
+
+        .hero-mobile-wrapper {
+            display: block !important;
+            width: 100vw;
+        }
+    }
+
+    @media (min-width: 769px) {
+        .hero-desktop {
+            display: block !important;
+        }
+
+        .hero-mobile-wrapper {
+            display: none !important;
+        }
+    }
+</style>

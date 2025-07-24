@@ -1,0 +1,615 @@
+---
+import "./GallerySection.scss";
+import VideoPlayer from "../../components/VideoPlayer/VideoPlayer.astro";
+import fs from "fs";
+import path from "path";
+
+interface MediaItem {
+    src: string;
+    alt: string;
+    type: "image" | "video";
+    category: string;
+    description: string;
+    eventType?: string;
+    dateCreated?: string;
+}
+
+interface GalleryCategory {
+    id: string;
+    name: string;
+    displayName: string;
+    description: string;
+    seoDescription: string;
+    itemType: string;
+}
+
+function getFilesFromDirectory(
+    dirPath: string,
+    extensions: string[],
+): string[] {
+    try {
+        const fullPath = path.join(process.cwd(), "public", dirPath);
+        if (!fs.existsSync(fullPath)) {
+            return [];
+        }
+
+        const files = fs.readdirSync(fullPath);
+        return files
+            .filter((file) => {
+                const ext = path.extname(file).toLowerCase();
+                return extensions.includes(ext);
+            })
+            .map((file) => `/${dirPath}/${file}`);
+    } catch (error) {
+        console.error(`Error reading directory ${dirPath}:`, error);
+        return [];
+    }
+}
+
+const imageExtensions = [".png", ".jpg", ".jpeg", ".webp", ".gif"];
+const videoExtensions = [".mp4", ".webm", ".mov", ".avi"];
+
+function getFilesFromSubdirectories(
+    basePath: string,
+    subdirs: string[],
+    extensions: string[],
+): string[] {
+    const allFiles: string[] = [];
+
+    subdirs.forEach((subdir) => {
+        const files = getFilesFromDirectory(
+            `${basePath}/${subdir}`,
+            extensions,
+        );
+        allFiles.push(...files);
+    });
+
+    return allFiles;
+}
+
+const eventSubdirs = [
+    "stendup",
+    "weddings",
+    "corporate-events",
+    "private-events",
+];
+
+const galleryImages = getFilesFromSubdirectories(
+    "gallery",
+    eventSubdirs,
+    imageExtensions,
+);
+const videoFiles = getFilesFromDirectory("videos", videoExtensions);
+const standupImages = getFilesFromDirectory("standup", imageExtensions);
+const standupVideos = getFilesFromDirectory("standup", videoExtensions);
+
+const categories: GalleryCategory[] = [
+    {
+        id: "gallery",
+        name: "ГАЛЕРЕЯ",
+        displayName: "Галерея мероприятий",
+        description: "Фотографии с проведенных мероприятий",
+        seoDescription:
+            "Портфолио фотографий профессионального ведущего Михаила Колесникова с корпоративных мероприятий, свадеб и частных праздников",
+        itemType: "ImageGallery",
+    },
+    {
+        id: "videos",
+        name: "ВИДЕО",
+        displayName: "Видео с мероприятий",
+        description: "Видеозаписи проведенных мероприятий",
+        seoDescription:
+            "Видеопортфолио ведущего мероприятий Михаила Колесникова - демонстрация профессионального мастерства и работы с аудиторией",
+        itemType: "VideoGallery",
+    },
+    {
+        id: "standup",
+        name: "СТЕНДАП",
+        displayName: "Стендап выступления",
+        description: "Фото и видео со стендап выступлений",
+        seoDescription:
+            "Стендап комедия от Михаила Колесникова - профессиональные комедийные выступления и развлекательные программы",
+        itemType: "Comedy",
+    },
+];
+
+const galleryData = {
+    gallery: galleryImages.map((src, index) => ({
+        src,
+        alt: `Профессиональное фото с мероприятия ${index + 1} ведущего Михаила Колесникова`,
+        type: "image" as const,
+        category: "gallery",
+        description: `Фотография с профессионально проведенного мероприятия, демонстрирующая работу ведущего`,
+        eventType: "Корпоративное мероприятие",
+        dateCreated: new Date().toISOString(),
+    })),
+    videos: videoFiles.map((src, index) => ({
+        src,
+        alt: `Видео с мероприятия ${index + 1} - работа ведущего Михаила Колесникова`,
+        type: "video" as const,
+        category: "videos",
+        description: `Видеозапись профессиональной работы ведущего мероприятий`,
+        eventType: "Мероприятие",
+        dateCreated: new Date().toISOString(),
+    })),
+    standup: [
+        ...standupImages.map((src, index) => ({
+            src,
+            alt: `Стендап выступление ${index + 1} - комедийное шоу Михаила Колесникова`,
+            type: "image" as const,
+            category: "standup",
+            description: `Фотография со стендап выступления - демонстрация комедийного мастерства`,
+            eventType: "Стендап комедия",
+            dateCreated: new Date().toISOString(),
+        })),
+        ...standupVideos.map((src, index) => ({
+            src,
+            alt: `Стендап видео ${index + 1} - комедийное выступление Михаила Колесникова`,
+            type: "video" as const,
+            category: "standup",
+            description: `Видеозапись стендап выступления - профессиональная комедия`,
+            eventType: "Стендап комедия",
+            dateCreated: new Date().toISOString(),
+        })),
+    ],
+};
+---
+
+<section
+    class="gallery"
+    itemscope
+    itemtype="https://schema.org/Person"
+    role="region"
+    aria-label="Портфолио и галерея работ Михаила Колесникова"
+>
+    <div class="container">
+        <div class="content">
+            <!-- Left side - Navigation -->
+            <nav
+                class="nav-section"
+                role="navigation"
+                aria-label="Категории портфолио"
+            >
+                <div
+                    class="nav-group"
+                    itemscope
+                    itemtype="https://schema.org/SiteNavigationElement"
+                >
+                    {
+                        categories.map((category) => (
+                            <button
+                                class={`nav-item ${category.id === "gallery" ? "nav-item--active" : ""}`}
+                                data-section={category.id}
+                                aria-controls={`${category.id}-content`}
+                                aria-expanded={
+                                    category.id === "gallery" ? "true" : "false"
+                                }
+                                title={category.seoDescription}
+                                itemprop="name"
+                            >
+                                {category.name}
+                            </button>
+                        ))
+                    }
+                </div>
+            </nav>
+
+            <main class="images-section">
+                <!-- Gallery Section -->
+                <section
+                    id="gallery-content"
+                    class="content-section content-section--active"
+                    itemscope
+                    itemtype="https://schema.org/ImageGallery"
+                    aria-labelledby="gallery-heading"
+                    role="tabpanel"
+                >
+                    <h2 id="gallery-heading" class="sr-only">
+                        Галерея фотографий с мероприятий
+                    </h2>
+                    <meta
+                        itemprop="name"
+                        content="Портфолио фотографий ведущего мероприятий"
+                    />
+                    <meta
+                        itemprop="description"
+                        content={categories[0].seoDescription}
+                    />
+                    <meta itemprop="creator" content="Михаил Колесников" />
+
+                    <div class="media-grid" role="grid">
+                        {
+                            galleryData.gallery
+                                .slice(0, 6)
+                                .map((item, index) => (
+                                    <figure
+                                        class="media-item"
+                                        itemprop="associatedMedia"
+                                        itemscope
+                                        itemtype="https://schema.org/ImageObject"
+                                        role="gridcell"
+                                    >
+                                        <img
+                                            src={item.src}
+                                            alt={item.alt}
+                                            class="media grayscale"
+                                            loading="lazy"
+                                            itemprop="contentUrl"
+                                            width="400"
+                                            height="300"
+                                        />
+                                        <meta
+                                            itemprop="description"
+                                            content={item.description}
+                                        />
+                                        <meta
+                                            itemprop="creator"
+                                            content="Михаил Колесников"
+                                        />
+                                        <meta
+                                            itemprop="copyrightHolder"
+                                            content="Михаил Колесников"
+                                        />
+                                        <meta
+                                            itemprop="dateCreated"
+                                            content={item.dateCreated}
+                                        />
+                                    </figure>
+                                ))
+                        }
+                    </div>
+
+                    <div class="view-all-container">
+                        <a
+                            href="/gallery/all"
+                            class="view-all-btn"
+                            id="gallery-link"
+                        >
+                            Посмотреть все
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M7 17L17 7"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"></path>
+                                <path
+                                    d="M7 7H17V17"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Videos Section -->
+                <section
+                    id="videos-content"
+                    class="content-section"
+                    itemscope
+                    itemtype="https://schema.org/VideoGallery"
+                    aria-labelledby="videos-heading"
+                    role="tabpanel"
+                >
+                    <h2 id="videos-heading" class="sr-only">
+                        Видео с мероприятий
+                    </h2>
+                    <meta
+                        itemprop="name"
+                        content="Видеопортфолио ведущего мероприятий"
+                    />
+                    <meta
+                        itemprop="description"
+                        content={categories[1].seoDescription}
+                    />
+                    <meta itemprop="creator" content="Михаил Колесников" />
+
+                    <div class="media-grid" role="grid">
+                        {
+                            galleryData.videos
+                                .slice(0, 6)
+                                .map((item, index) => (
+                                    <figure
+                                        class="media-item"
+                                        itemprop="associatedMedia"
+                                        itemscope
+                                        itemtype="https://schema.org/VideoObject"
+                                        role="gridcell"
+                                    >
+                                        <VideoPlayer
+                                            src={item.src}
+                                            alt={item.alt}
+                                            className="media"
+                                            itemprop="contentUrl"
+                                        />
+                                        <meta
+                                            itemprop="name"
+                                            content={item.alt}
+                                        />
+                                        <meta
+                                            itemprop="description"
+                                            content={item.description}
+                                        />
+                                        <meta
+                                            itemprop="creator"
+                                            content="Михаил Колесников"
+                                        />
+                                        <meta
+                                            itemprop="uploadDate"
+                                            content={item.dateCreated}
+                                        />
+                                    </figure>
+                                ))
+                        }
+                    </div>
+
+                    <div class="view-all-container">
+                        <a
+                            href="/gallery/videos"
+                            class="view-all-btn"
+                            id="videos-link"
+                        >
+                            Посмотреть все
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M7 17L17 7"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"></path>
+                                <path
+                                    d="M7 7H17V17"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Standup Section -->
+                <section
+                    id="standup-content"
+                    class="content-section"
+                    itemscope
+                    itemtype="https://schema.org/MediaGallery"
+                    aria-labelledby="standup-heading"
+                    role="tabpanel"
+                >
+                    <h2 id="standup-heading" class="sr-only">
+                        Стендап выступления
+                    </h2>
+                    <meta itemprop="name" content="Стендап комедия" />
+                    <meta
+                        itemprop="description"
+                        content={categories[2].seoDescription}
+                    />
+                    <meta itemprop="creator" content="Михаил Колесников" />
+
+                    <div class="media-grid" role="grid">
+                        {
+                            galleryData.standup
+                                .slice(0, 6)
+                                .map((item, index) => (
+                                    <figure
+                                        class="media-item"
+                                        itemprop="associatedMedia"
+                                        itemscope
+                                        itemtype={
+                                            item.type === "video"
+                                                ? "https://schema.org/VideoObject"
+                                                : "https://schema.org/ImageObject"
+                                        }
+                                        role="gridcell"
+                                    >
+                                        {item.type === "video" ? (
+                                            <VideoPlayer
+                                                src={item.src}
+                                                alt={item.alt}
+                                                className="media"
+                                                itemprop="contentUrl"
+                                            />
+                                        ) : (
+                                            <img
+                                                src={item.src}
+                                                alt={item.alt}
+                                                class="media grayscale"
+                                                loading="lazy"
+                                                itemprop="contentUrl"
+                                                width="400"
+                                                height="300"
+                                            />
+                                        )}
+                                        <meta
+                                            itemprop="name"
+                                            content={item.alt}
+                                        />
+                                        <meta
+                                            itemprop="description"
+                                            content={item.description}
+                                        />
+                                        <meta
+                                            itemprop="creator"
+                                            content="Михаил Колесников"
+                                        />
+                                        <meta
+                                            itemprop="genre"
+                                            content="Комедия"
+                                        />
+                                        <meta
+                                            itemprop="dateCreated"
+                                            content={item.dateCreated}
+                                        />
+                                    </figure>
+                                ))
+                        }
+                    </div>
+
+                    <div class="view-all-container">
+                        <a
+                            href="/gallery/standup"
+                            class="view-all-btn"
+                            id="standup-link"
+                        >
+                            Посмотреть все
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M7 17L17 7"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"></path>
+                                <path
+                                    d="M7 7H17V17"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- JSON-LD структурированные данные для портфолио -->
+    <script type="application/ld+json" is:inline>
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Михаил Колесников",
+            "jobTitle": "Ведущий мероприятий",
+            "hasCredential": [
+                {
+                    "@type": "EducationalOccupationalCredential",
+                    "name": "Портфолио фотографий",
+                    "description": "Обширная коллекция фотографий с проведенных мероприятий",
+                    "credentialCategory": "Профессиональное портфолио"
+                },
+                {
+                    "@type": "EducationalOccupationalCredential",
+                    "name": "Видеопортфолио",
+                    "description": "Видеозаписи профессиональной работы ведущего",
+                    "credentialCategory": "Демонстрация навыков"
+                },
+                {
+                    "@type": "EducationalOccupationalCredential",
+                    "name": "Стендап комедия",
+                    "description": "Коллекция комедийных выступлений",
+                    "credentialCategory": "Развлекательные навыки"
+                }
+            ],
+            "workExample": [
+                {
+                    "@type": "CreativeWork",
+                    "name": "Портфолио мероприятий",
+                    "description": "Фотографии и видео с профессионально проведенных мероприятий",
+                    "genre": "Корпоративные мероприятия",
+                    "creator": {
+                        "@type": "Person",
+                        "name": "Михаил Колесников"
+                    }
+                },
+                {
+                    "@type": "CreativeWork",
+                    "name": "Стендап выступления",
+                    "description": "Комедийные выступления и развлекательные программы",
+                    "genre": "Комедия",
+                    "creator": {
+                        "@type": "Person",
+                        "name": "Михаил Колесников"
+                    }
+                }
+            ]
+        }
+    </script>
+
+    <!-- Hidden CSS for screen readers -->
+    <style>
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const navButtons =
+            document.querySelectorAll<HTMLButtonElement>(".nav-item");
+        const contentSections =
+            document.querySelectorAll<HTMLDivElement>(".content-section");
+
+        const sectionUrls = {
+            gallery: "/gallery/weddings",
+            videos: "/gallery/videos",
+            standup: "/gallery/standup",
+        };
+
+        navButtons.forEach((button) => {
+            button.addEventListener(
+                "click",
+                function (this: HTMLButtonElement) {
+                    const targetSection = this.getAttribute("data-section");
+
+                    navButtons.forEach((btn) =>
+                        btn.classList.remove("nav-item--active"),
+                    );
+                    contentSections.forEach((section) =>
+                        section.classList.remove("content-section--active"),
+                    );
+
+                    this.classList.add("nav-item--active");
+                    const targetContent = document.getElementById(
+                        targetSection + "-content",
+                    );
+                    if (targetContent) {
+                        targetContent.classList.add("content-section--active");
+                    }
+
+                    const currentViewAllBtn = targetContent?.querySelector(
+                        ".view-all-btn",
+                    ) as HTMLAnchorElement;
+                    if (
+                        currentViewAllBtn &&
+                        targetSection &&
+                        sectionUrls[targetSection as keyof typeof sectionUrls]
+                    ) {
+                        currentViewAllBtn.href =
+                            sectionUrls[
+                                targetSection as keyof typeof sectionUrls
+                            ];
+                    }
+                },
+            );
+        });
+    });
+</script>

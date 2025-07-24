@@ -1,0 +1,121 @@
+---
+import "./HeroMobile.scss";
+
+interface ServiceCategory {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+    position: string;
+}
+
+const categories: ServiceCategory[] = [
+    {
+        id: 1,
+        name: "СВАДЬБЫ",
+        position: "category-1",
+        slug: "weddings",
+        description:
+            "Профессиональное ведение свадебных торжеств с индивидуальным подходом",
+    },
+    {
+        id: 2,
+        name: "КОРПОРАТИВЫ",
+        position: "category-2",
+        slug: "corporate-events",
+        description:
+            "Организация корпоративных мероприятий и деловых праздников",
+    },
+    {
+        id: 3,
+        name: "СТЕНДАП",
+        position: "category-3",
+        slug: "standup",
+        description:
+            "Комедийные стендап выступления и развлекательные программы",
+    },
+];
+
+const dots = [{ position: "dot-1" }, { position: "dot-2" }];
+---
+
+<section class="hero-mobile" itemscope itemtype="https://schema.org/Person">
+    <div class="hero-card">
+        <div class="hero-content">
+            {/* Person image and decoration text */}
+            <div class="hero-images">
+                <img
+                    class="decoration-text"
+                    alt="Интеллигентно и смешно - слоган Михаила Колесникова"
+                    src="/type.svg"
+                    width="214"
+                    height="69"
+                />
+                <img
+                    class="mobile-person"
+                    alt="Профессиональный ведущий Михаил Колесников - опытный MC для свадеб, корпоративов и частных мероприятий"
+                    src="/person__mobile.png"
+                    width="382"
+                    height="654"
+                    loading="eager"
+                    fetchpriority="high"
+                    itemprop="image"
+                />
+            </div>
+
+            {/* Header content */}
+            <header class="hero-header">
+                {/* Name heading */}
+                <h1 class="hero-title" itemprop="name">МИХАИЛ КОЛЕСНИКОВ</h1>
+
+                {/* Hidden structured data */}
+                <meta
+                    itemprop="jobTitle"
+                    content="Ведущий мероприятий, MC, Presenter"
+                />
+                <meta
+                    itemprop="description"
+                    content="Профессиональный ведущий мероприятий в России. Специализируется на свадьбах, корпоративных мероприятиях, частных праздниках и стендап выступлениях."
+                />
+                <meta itemprop="url" content="https://mikhailkolesnikov.ru" />
+
+                {/* Categories section */}
+                <nav
+                    class="categories-container"
+                    role="navigation"
+                    aria-label="Услуги ведущего"
+                >
+                    {
+                        categories.map((category) => (
+                            <div
+                                class={`category ${category.position}`}
+                                itemprop="hasOfferCatalog"
+                                itemscope
+                                itemtype="https://schema.org/OfferCatalog"
+                                title={category.description}
+                                aria-label={category.description}
+                            >
+                                <meta itemprop="name" content={category.name} />
+                                <meta
+                                    itemprop="description"
+                                    content={category.description}
+                                />
+                                {category.name}
+                            </div>
+                        ))
+                    }
+
+                    {/* Separator dots */}
+                    {
+                        dots.map((dot) => (
+                            <div
+                                class={`dot ${dot.position}`}
+                                role="presentation"
+                            />
+                        ))
+                    }
+                </nav>
+            </header>
+        </div>
+    </div>
+</section>

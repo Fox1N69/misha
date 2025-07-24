@@ -1,0 +1,315 @@
+---
+import type { Locale } from '../i18n/translations';
+import "./global.css";
+
+interface Props {
+  locale: Locale;
+  title?: string;
+  description?: string;
+  keywords?: string;
+}
+
+const { locale, title, description, keywords } = Astro.props;
+
+const seoData = {
+  ru: {
+    title: title || "Михаил Колесников - Ведущий мероприятий | Свадьбы, корпоративы, стендап",
+    description: description || "Профессиональный ведущий Михаил Колесников. Организация свадеб, корпоративных мероприятий, частных праздников и стендап выступлений. Интеллигентно и смешно!",
+    keywords: keywords || "ведущий мероприятий, тамада, свадьба, корпоратив, стендап, Михаил Колесников, организация праздников, ведущий на свадьбу, MC, presenter",
+    author: "Михаил Колесников",
+    url: "https://mikhailkolesnikov.ru",
+    image: "/person.png",
+    type: "website" as const,
+    language: "Russian",
+    ogLocale: "ru_RU",
+    siteName: "Михаил Колесников"
+  },
+  en: {
+    title: title || "Mikhail Kolesnikov - Event Host | Weddings, Corporate Events, Stand-up",
+    description: description || "Professional event host Mikhail Kolesnikov. Wedding ceremonies, corporate events, private celebrations, and stand-up comedy performances. Intelligent and funny!",
+    keywords: keywords || "event host, toastmaster, wedding, corporate events, stand-up, Mikhail Kolesnikov, party organization, wedding host, MC, presenter",
+    author: "Mikhail Kolesnikov",
+    url: "https://mikhailkolesnikov.ru/en",
+    image: "/person.png",
+    type: "website" as const,
+    language: "English",
+    ogLocale: "en_US",
+    siteName: "Mikhail Kolesnikov"
+  }
+};
+
+const currentSeoData = seoData[locale];
+const langCode = locale === 'ru' ? 'ru' : 'en';
+
+const structuredDataPerson = {
+  ru: {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Михаил Колесников",
+    "jobTitle": "Ведущий мероприятий",
+    "description": "Профессиональный ведущий мероприятий, MC и presenter",
+    "url": "https://mikhailkolesnikov.ru",
+    "image": "https://mikhailkolesnikov.ru/person.png",
+    "telephone": "+7 ___-___-__-__",
+    "email": "POCHTA@POCHTA.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "RU"
+    },
+    "offers": [
+      {
+        "@type": "Service",
+        "name": "Ведение свадеб",
+        "description": "Профессиональное ведение свадебных церемоний",
+        "provider": {
+          "@type": "Person",
+          "name": "Михаил Колесников"
+        }
+      },
+      {
+        "@type": "Service",
+        "name": "Корпоративные мероприятия",
+        "description": "Организация и ведение корпоративных праздников",
+        "provider": {
+          "@type": "Person",
+          "name": "Михаил Колесников"
+        }
+      },
+      {
+        "@type": "Service",
+        "name": "Частные мероприятия",
+        "description": "Ведение частных праздников и торжеств",
+        "provider": {
+          "@type": "Person",
+          "name": "Михаил Колесников"
+        }
+      },
+      {
+        "@type": "Service",
+        "name": "Стендап выступления",
+        "description": "Комедийные стендап выступления",
+        "provider": {
+          "@type": "Person",
+          "name": "Михаил Колесников"
+        }
+      }
+    ],
+    "sameAs": [
+      "https://t.me/mikhailkolesnikov",
+      "https://wa.me/79000000000"
+    ]
+  },
+  en: {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Mikhail Kolesnikov",
+    "jobTitle": "Event Host",
+    "description": "Professional event host, MC and presenter",
+    "url": "https://mikhailkolesnikov.ru/en",
+    "image": "https://mikhailkolesnikov.ru/person.png",
+    "telephone": "+7 ___-___-__-__",
+    "email": "POCHTA@POCHTA.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "RU"
+    },
+    "offers": [
+      {
+        "@type": "Service",
+        "name": "Wedding Hosting",
+        "description": "Professional wedding ceremony hosting",
+        "provider": {
+          "@type": "Person",
+          "name": "Mikhail Kolesnikov"
+        }
+      },
+      {
+        "@type": "Service",
+        "name": "Corporate Events",
+        "description": "Organization and hosting of corporate celebrations",
+        "provider": {
+          "@type": "Person",
+          "name": "Mikhail Kolesnikov"
+        }
+      },
+      {
+        "@type": "Service",
+        "name": "Private Events",
+        "description": "Hosting private celebrations and gatherings",
+        "provider": {
+          "@type": "Person",
+          "name": "Mikhail Kolesnikov"
+        }
+      },
+      {
+        "@type": "Service",
+        "name": "Stand-up Performances",
+        "description": "Comedy stand-up performances",
+        "provider": {
+          "@type": "Person",
+          "name": "Mikhail Kolesnikov"
+        }
+      }
+    ],
+    "sameAs": [
+      "https://t.me/mikhailkolesnikov",
+      "https://wa.me/79000000000"
+    ]
+  }
+};
+---
+
+<!doctype html>
+<html lang={langCode}>
+    <head>
+        <meta charset="utf-8" />
+
+        <!-- Language switching -->
+        <script is:inline>
+          // Set initial locale in localStorage
+          if (!localStorage.getItem('locale')) {
+            localStorage.setItem('locale', document.documentElement.lang);
+          }
+        </script>
+
+        <!-- Primary Meta Tags -->
+        <title>{currentSeoData.title}</title>
+        <meta name="title" content={currentSeoData.title} />
+        <meta name="description" content={currentSeoData.description} />
+        <meta name="keywords" content={currentSeoData.keywords} />
+        <meta name="author" content={currentSeoData.author} />
+        <meta name="robots" content="index, follow" />
+        <meta name="language" content={currentSeoData.language} />
+        <meta name="revisit-after" content="7 days" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content={Astro.generator} />
+
+        <!-- Alternate languages -->
+        <link rel="alternate" hreflang="ru" href="https://mikhailkolesnikov.ru" />
+        <link rel="alternate" hreflang="en" href="https://mikhailkolesnikov.ru/en" />
+        <link rel="alternate" hreflang="x-default" href="https://mikhailkolesnikov.ru" />
+
+        <!-- Canonical URL -->
+        <link rel="canonical" href={currentSeoData.url} />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content={currentSeoData.type} />
+        <meta property="og:url" content={currentSeoData.url} />
+        <meta property="og:title" content={currentSeoData.title} />
+        <meta property="og:description" content={currentSeoData.description} />
+        <meta property="og:image" content={currentSeoData.url + currentSeoData.image} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:locale" content={currentSeoData.ogLocale} />
+        <meta property="og:site_name" content={currentSeoData.siteName} />
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={currentSeoData.url} />
+        <meta property="twitter:title" content={currentSeoData.title} />
+        <meta property="twitter:description" content={currentSeoData.description} />
+        <meta property="twitter:image" content={currentSeoData.url + currentSeoData.image} />
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/apple-touch-icon.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/favicon-32x32.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
+
+        <!-- Preconnects for performance -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preconnect" href="https://ipapi.co" />
+
+        <!-- Google Fonts with display=swap for performance -->
+        <link
+            href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- JSON-LD Structured Data -->
+        <script type="application/ld+json" set:html={JSON.stringify(structuredDataPerson[locale])}></script>
+
+        <!-- Geo-detection and automatic language switching -->
+        <script is:inline>
+          // Only run geo-detection on first visit
+          if (!localStorage.getItem('locale-detected')) {
+            fetch('https://ipapi.co/json/')
+              .then(response => response.json())
+              .then(data => {
+                const country = data.country_code?.toLowerCase();
+                const russianSpeakingCountries = ['ru', 'by', 'kz', 'kg', 'tj', 'uz', 'tm', 'md', 'am', 'az'];
+                const shouldUseRussian = !country || russianSpeakingCountries.includes(country);
+                const currentLang = document.documentElement.lang;
+                
+                localStorage.setItem('locale-detected', 'true');
+                
+                // Redirect if needed
+                if (shouldUseRussian && currentLang === 'en') {
+                  // Redirect to Russian version
+                  window.location.href = window.location.href.replace('/en', '');
+                } else if (!shouldUseRussian && currentLang === 'ru') {
+                  // Redirect to English version
+                  window.location.href = window.location.origin + '/en' + window.location.pathname;
+                }
+                
+                localStorage.setItem('locale', shouldUseRussian ? 'ru' : 'en');
+              })
+              .catch(() => {
+                // Fallback to browser language
+                const browserLang = navigator.language.toLowerCase();
+                const shouldUseRussian = !browserLang.startsWith('en');
+                localStorage.setItem('locale-detected', 'true');
+                localStorage.setItem('locale', shouldUseRussian ? 'ru' : 'en');
+              });
+          }
+        </script>
+    </head>
+    <body>
+        <main>
+            <slot />
+        </main>
+
+        <!-- Language switcher (hidden, can be shown if needed) -->
+        <div id="language-switcher" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 1000;">
+          <button onclick="switchLanguage('ru')" style="margin-right: 10px;">RU</button>
+          <button onclick="switchLanguage('en')">EN</button>
+        </div>
+
+        <script is:inline>
+          function switchLanguage(lang) {
+            localStorage.setItem('locale', lang);
+            localStorage.setItem('locale-detected', 'true');
+            
+            if (lang === 'ru') {
+              if (window.location.pathname.startsWith('/en')) {
+                window.location.href = window.location.href.replace('/en', '');
+              } else {
+                window.location.reload();
+              }
+            } else {
+              if (!window.location.pathname.startsWith('/en')) {
+                window.location.href = window.location.origin + '/en' + window.location.pathname;
+              } else {
+                window.location.reload();
+              }
+            }
+          }
+        </script>
+    </body>
+</html>

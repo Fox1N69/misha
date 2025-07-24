@@ -1,0 +1,585 @@
+@use 'sass:color';
+
+// === VARIABLES ===
+$color-bg-primary: #030E12;
+$color-text-primary: #FFFAF2;
+$color-text-secondary: #EBEBEB;
+$color-text-muted: #9A9A9A;
+$color-text-black: #000000;
+$color-border: #DDDDDD;
+$color-error: #ff4444;
+
+$font-family: 'Manrope', sans-serif;
+
+$breakpoint-desktop: 1440px;
+$breakpoint-tablet: 768px;
+
+// === MIXINS ===
+@mixin font-style($size, $weight, $line-height, $color: inherit) {
+  font-family: $font-family;
+  font-size: $size;
+  font-weight: $weight;
+  line-height: $line-height;
+  color: $color;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-column($gap: 0) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+}
+
+@mixin flex-row($gap: 0, $align: center) {
+  display: flex;
+  align-items: $align;
+  gap: $gap;
+}
+
+@mixin button-reset {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+// === BLOCK: CTA ===
+.cta {
+  width: 100%;
+  min-height: 1036px;
+  background-color: $color-bg-primary;
+  padding: 0;
+  align-items: flex-start !important;
+  padding-bottom: 100px;
+
+
+  @include flex-center;
+
+  &__container {
+    width: 100%;
+    max-width: 1360px;
+    @include flex-column(76px);
+    padding-top: 0;
+  }
+
+  &__title {
+    @include font-style(120px, 500, 1.366, $color-text-primary);
+    text-align: left;
+    height: 130px;
+    margin: 0;
+    padding: 0;
+    line-height: 0.8;
+    margin-top: -0.07em;
+  }
+
+  &__content {
+    @include flex-column(125px);
+    align-items: flex-end;
+    width: 100%;
+  }
+
+  &__form {
+    @include flex-column(43px);
+    align-items: flex-end;
+    width: 690px;
+  }
+
+  &__bottom {
+    @include flex-row(339px, flex-end);
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__contacts {
+    @include flex-column(47px);
+    width: 691px;
+  }
+
+  &__download-btn {
+    @include button-reset;
+    width: 330px;
+    height: 61px;
+    background-color: $color-text-primary;
+    @include font-style(18px, 500, 1.366, $color-bg-primary);
+    text-transform: uppercase;
+
+    &:hover {
+      background-color: color.adjust($color-text-primary, $lightness: -5%);
+    }
+  }
+}
+
+// === BLOCK: FORM ===
+.form {
+  &__inputs {
+    width: 690px;
+    height: 259px;
+    position: relative;
+  }
+
+  &__input-group {
+    position: absolute;
+    width: 687px;
+
+    &:nth-child(1) {
+      top: 0px;
+      left: 3px;
+      height: 37px;
+    }
+
+    &:nth-child(2) {
+      top: 73px;
+      left: 3px;
+      height: 38px;
+    }
+
+    &:nth-child(3) {
+      top: 142px;
+      left: 3px;
+      height: 41px;
+    }
+
+    &:nth-child(4) {
+      top: 219px;
+      left: 0px;
+      height: 40px;
+    }
+
+    &:nth-child(5) {
+      top: 296px;
+      left: 0px;
+      height: 40px;
+    }
+  }
+
+  &__input {
+    @include font-style(20px, 500, 1.366, $color-text-muted);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid $color-border;
+    width: 100%;
+    padding: 0 0 10px 0;
+    outline: none;
+
+    &::placeholder {
+      color: $color-text-muted;
+    }
+
+    &:focus {
+      border-bottom-color: $color-text-primary;
+      color: $color-text-secondary;
+    }
+
+    &--error {
+      border-bottom-color: $color-error;
+    }
+
+    &--phone {
+      // Специфичные стили для телефона
+    }
+  }
+
+  &__select {
+    appearance: none;
+    cursor: pointer;
+
+    // Стилизация option для disabled
+    option:disabled {
+      color: $color-text-muted;
+    }
+
+    option {
+      color: $color-text-black;
+      background-color: $color-text-primary;
+    }
+  }
+
+  &__textarea {
+    resize: vertical;
+    min-height: 60px;
+    font-family: $font-family;
+  }
+
+  &__submit-btn {
+    @include button-reset;
+    width: 327px;
+    height: 58px;
+    background-color: $color-text-primary;
+    @include font-style(20px, 500, 1.366, $color-text-black);
+    text-transform: uppercase;
+
+    &:hover {
+      background-color: color.adjust($color-text-primary, $lightness: -5%);
+    }
+  }
+}
+
+// === BLOCK: CONTACTS ===
+.contacts {
+  &__info {
+    @include flex-column(40px);
+    width: 100%;
+  }
+
+  &__item {
+    @include font-style(60px, 400, 1.05, $color-text-secondary);
+    letter-spacing: -1%;
+    text-transform: uppercase;
+
+    &--email {
+      height: 45px;
+    }
+
+    &--phone {
+      height: 51px;
+    }
+  }
+
+  &__social {
+    @include flex-row(114px);
+  }
+}
+
+// === BLOCK: SOCIAL ===
+.social {
+  &__link {
+    @include flex-row(10px);
+    text-decoration: none;
+    color: inherit;
+
+    &--telegram {
+      width: 131px;
+      height: 29px;
+
+      gap: 17px;
+    }
+
+    &--whatsapp {
+      gap: 17px;
+    }
+
+    &:hover {
+      .social__icon {
+        fill: color.adjust($color-text-secondary, $lightness: -10%);
+      }
+
+      .social__text {
+        color: color.adjust($color-text-secondary, $lightness: -10%);
+      }
+    }
+  }
+
+  &__icon {
+    fill: $color-text-secondary;
+    transition: fill 0.3s ease;
+
+    &--whatsapp {
+      width: 29px;
+      height: 29px;
+    }
+
+
+    &--telegram {
+      width: 45px;
+      height: 45px;
+    }
+  }
+
+  &__text {
+    @include font-style(30px, 400, 1.3, $color-text-secondary);
+    text-align: center;
+    transition: color 0.3s ease;
+  }
+
+}
+
+.download-btn {}
+
+// === RESPONSIVE ===
+@media (max-width: $breakpoint-desktop) {
+  .cta {
+    &__title {
+      font-size: 80px;
+    }
+
+    &__bottom {
+      flex-direction: column;
+      gap: 60px;
+      align-items: center;
+    }
+
+    &__contacts {
+      width: 100%;
+    }
+  }
+
+  .contacts {
+    &__item {
+      font-size: 40px;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-tablet) {
+  .cta {
+    padding: 0 20px;
+
+    &__title {
+      font-size: 48px;
+      height: auto;
+    }
+
+    &__form {
+      width: 100%;
+    }
+
+    &__bottom {
+      gap: 40px;
+    }
+  }
+
+  .form {
+    &__inputs {
+      width: 100%;
+      height: auto;
+      position: static;
+      @include flex-column(30px);
+    }
+
+    &__input-group {
+      position: static;
+      width: 100%;
+      height: auto;
+
+      &:nth-child(1),
+      &:nth-child(2),
+      &:nth-child(3),
+      &:nth-child(4) {
+        position: static;
+        top: auto;
+        left: auto;
+        height: auto;
+      }
+    }
+
+    &__submit-btn {
+      width: 100%;
+      max-width: 327px;
+    }
+  }
+
+  .contacts {
+    &__item {
+      font-size: 24px;
+      height: auto;
+    }
+
+    &__social {
+      flex-direction: column;
+      gap: 30px;
+      align-items: flex-start;
+    }
+  }
+
+  .social {
+    &__link {
+      &--telegram {
+        width: auto;
+        height: auto;
+      }
+    }
+
+    &__text {
+      font-size: 20px;
+    }
+
+    &__icon {
+      &--telegram {
+        width: 29px;
+        height: 29px;
+      }
+    }
+  }
+
+  .cta__download-btn {
+    width: 100%;
+    max-width: 330px;
+  }
+}
+
+.dby {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  align-items: center;
+
+  &__text {
+
+    color: #FFFAF2;
+    font-size: 18px;
+
+    a {
+      font-weight: bold;
+      font-size: 23px;
+    }
+  }
+}
+
+@media (min-width: 1920px) {
+  .cta {
+    min-height: 1378px;
+
+    &__container {
+      max-width: 1811px;
+      gap: 101px;
+    }
+
+    &__title {
+      font-size: 160px;
+      height: 173px;
+    }
+
+    &__content {
+      gap: 166px;
+    }
+
+    &__form {
+      gap: 57px;
+      width: 918px;
+    }
+
+    &__bottom {
+      gap: 451px;
+    }
+
+    &__contacts {
+      gap: 63px;
+      width: 920px;
+    }
+
+    &__download-btn {
+      width: 439px;
+      height: 81px;
+      font-size: 24px;
+    }
+  }
+
+  .form {
+    &__inputs {
+      width: 918px;
+      height: 500px;
+    }
+
+    &__input-group {
+      width: 914px;
+
+      &:nth-child(1) {
+        top: 0px;
+        left: 4px;
+        height: 49px;
+      }
+
+      &:nth-child(2) {
+        top: 97px;
+        left: 4px;
+        height: 51px;
+      }
+
+      &:nth-child(3) {
+        top: 189px;
+        left: 4px;
+        height: 55px;
+      }
+
+      &:nth-child(4) {
+        top: 291px;
+        left: 0px;
+        height: 53px;
+      }
+
+      &:nth-child(5) {
+        top: 391px;
+        left: 0px;
+        height: 55px;
+      }
+    }
+
+    &__input {
+      font-size: 27px;
+      padding: 0 0 13px 0;
+    }
+
+    &__textarea {
+      font-size: 27px;
+      min-height: 80px;
+    }
+
+    &__select {
+      font-size: 27px;
+    }
+
+    &__submit-btn {
+      width: 435px;
+      height: 77px;
+      font-size: 27px;
+    }
+  }
+
+  .contacts {
+    &__info {
+      gap: 53px;
+    }
+
+    &__item {
+      font-size: 80px;
+
+      &--email {
+        height: 60px;
+      }
+
+      &--phone {
+        height: 68px;
+      }
+    }
+
+    &__social {
+      gap: 152px;
+    }
+  }
+
+  .social {
+    &__link {
+      gap: 13px;
+
+      &--telegram {
+        width: 174px;
+        height: 39px;
+      }
+
+      &--whatsapp {
+        gap: 23px;
+      }
+    }
+
+    &__icon {
+      &--whatsapp {
+        width: 39px;
+        height: 39px;
+      }
+
+      &--telegram {
+        width: 39px;
+        height: 39px;
+      }
+    }
+
+    &__text {
+      font-size: 40px;
+    }
+  }
+}

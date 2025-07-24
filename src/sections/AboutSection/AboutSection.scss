@@ -1,0 +1,756 @@
+.about-section {
+  background-color: #030e12;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.about-container {
+  background-color: #030e12;
+  width: 1440px;
+  position: relative;
+  padding-top: 80px;
+  padding-bottom: 130px;
+}
+
+.about-title {
+  font-weight: 500;
+  color: #fffaf2;
+  font-size: 80px;
+  letter-spacing: -2px;
+  line-height: 80.1px;
+  white-space: nowrap;
+  margin-bottom: 48px;
+  margin-left: 40px;
+}
+
+.about-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.portrait-section {
+  position: relative;
+  width: 679px;
+  height: 558px;
+  margin-left: 40px;
+}
+
+.images-container {
+  position: relative;
+  width: 712px;
+  height: 587px;
+  top: -29px;
+  left: -29px;
+}
+
+.trail-img {
+  position: absolute;
+  width: 399px;
+  height: 587px;
+  top: 0;
+
+  &--1 {
+    left: 0;
+  }
+
+  &--2 {
+    left: 115px;
+  }
+
+  &--3 {
+    left: 224px; // 14rem = 224px
+  }
+}
+
+.portrait-img {
+  position: absolute;
+  width: 350px;
+  height: 562px;
+  top: 25px;
+  left: 362px;
+}
+
+.experience-section {
+  display: flex;
+  flex-direction: column;
+  width: 489px;
+  gap: 86px;
+  max-height: 500px;
+}
+
+.experience-items {
+  width: 100%;
+}
+
+.experience-item {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 50px;
+}
+
+.experience-number {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  width: 115px;
+
+  .number {
+    font-weight: 500;
+    color: white;
+    font-size: 60px; // text-6xl
+    letter-spacing: 0;
+    line-height: normal;
+  }
+
+  .unit {
+    font-weight: 500;
+    color: white;
+    font-size: 18px; // text-lg
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+  }
+}
+
+
+.experience-details {
+  margin-left: 44px; // ml-11
+  position: relative;
+  top: 32px;
+
+  .subtitle {
+    font-weight: 500;
+    color: #fffaf2;
+    font-size: 16px; // text-base
+    letter-spacing: 0;
+    line-height: normal;
+    margin-bottom: 15px;
+  }
+
+  .description {
+    font-weight: 500;
+    color: #b8b8b8;
+    font-size: 16px; // text-base
+    letter-spacing: 0;
+    line-height: 20.8px;
+  }
+}
+
+.download-button {
+  width: 491px;
+  height: 57px;
+  border-radius: 0;
+  background-color: #fffaf2;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 250, 242, 0.9);
+  }
+
+  .button-text {
+    font-weight: 500;
+    color: #030e12;
+    font-size: 18px;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+  }
+}
+
+// FullHD 1920px - увеличение на 33%
+@media (min-width: 1920px) {
+  .about-container {
+    width: 1920px;
+    padding-top: 106px;
+    padding-bottom: 173px;
+  }
+
+  .about-title {
+    font-size: 106px;
+    letter-spacing: -2.67px;
+    line-height: 106.5px;
+    margin-bottom: 64px;
+    margin-left: 53px;
+  }
+
+  .portrait-section {
+    width: 903px;
+    height: 742px;
+    margin-left: 53px;
+  }
+
+  .images-container {
+    width: 947px;
+    height: 781px;
+    top: -39px;
+    left: -39px;
+  }
+
+  .trail-img {
+    width: 531px;
+    height: 781px;
+
+    &--2 {
+      left: 153px;
+    }
+
+    &--3 {
+      left: 298px;
+    }
+  }
+
+  .portrait-img {
+    width: 466px;
+    height: 747px;
+    top: 33px;
+    left: 481px;
+  }
+
+  .experience-section {
+    width: 651px;
+    gap: 114px;
+    max-height: 665px;
+  }
+
+  .experience-item {
+    margin-bottom: 66px;
+  }
+
+  .experience-number {
+    gap: 11px;
+    width: 153px;
+
+    .number {
+      font-size: 80px;
+    }
+
+    .unit {
+      font-size: 24px;
+    }
+  }
+
+  .experience-details {
+    margin-left: 59px;
+    top: 43px;
+
+    .subtitle {
+      font-size: 21px;
+      margin-bottom: 20px;
+    }
+
+    .description {
+      font-size: 21px;
+      line-height: 27.7px;
+    }
+  }
+
+  .download-button {
+    width: 653px;
+    height: 76px;
+
+    .button-text {
+      font-size: 24px;
+    }
+  }
+}
+
+// 2K 2560px - увеличение на 78%
+@media (min-width: 2560px) {
+  .about-container {
+    width: 2560px;
+    padding-top: 142px;
+    padding-bottom: 231px;
+  }
+
+  .about-title {
+    font-size: 142px;
+    letter-spacing: -3.56px;
+    line-height: 142.6px;
+    margin-bottom: 85px;
+    margin-left: 71px;
+  }
+
+  .portrait-section {
+    width: 1208px;
+    height: 993px;
+    margin-left: 71px;
+  }
+
+  .images-container {
+    width: 1267px;
+    height: 1045px;
+    top: -52px;
+    left: -52px;
+  }
+
+  .trail-img {
+    width: 710px;
+    height: 1045px;
+
+    &--2 {
+      left: 205px;
+    }
+
+    &--3 {
+      left: 399px;
+    }
+  }
+
+  .portrait-img {
+    width: 623px;
+    height: 1000px;
+    top: 44px;
+    left: 644px;
+  }
+
+  .experience-section {
+    width: 870px;
+    gap: 153px;
+    max-height: 890px;
+  }
+
+  .experience-item {
+    margin-bottom: 89px;
+  }
+
+  .experience-number {
+    gap: 14px;
+    width: 205px;
+
+    .number {
+      font-size: 107px;
+    }
+
+    .unit {
+      font-size: 32px;
+    }
+  }
+
+  .experience-details {
+    margin-left: 78px;
+    top: 57px;
+
+    .subtitle {
+      font-size: 28px;
+      margin-bottom: 27px;
+    }
+
+    .description {
+      font-size: 28px;
+      line-height: 37px;
+    }
+  }
+
+  .download-button {
+    width: 874px;
+    height: 101px;
+
+    .button-text {
+      font-size: 32px;
+    }
+  }
+}
+
+// Mobile styles
+@media (max-width: 768px) {
+  .about-section {
+    padding: 0 16px;
+  }
+
+  .about-container {
+    width: 100%;
+    max-width: 100%;
+    padding-top: 40px;
+    padding-bottom: 60px;
+  }
+
+  .about-title {
+    font-size: 2.5rem;
+    line-height: 1.1;
+    margin-bottom: 32px;
+    margin-left: 0;
+    text-align: center;
+    white-space: normal;
+    letter-spacing: -1px;
+  }
+
+  .about-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .portrait-section {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    margin-left: 0;
+    margin: 0 auto;
+  }
+
+  .images-container {
+    width: 100%;
+    height: 400px;
+    position: relative;
+    top: 0;
+    left: 0;
+  }
+
+  .trail-img {
+    width: 120px;
+    height: 400px;
+
+    &--1 {
+      left: 0;
+    }
+
+    &--2 {
+      left: 60px;
+    }
+
+    &--3 {
+      left: 120px;
+    }
+  }
+
+  .portrait-img {
+    width: 200px;
+    height: 350px;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+  }
+
+  .experience-section {
+    width: 100%;
+    max-width: 100%;
+    gap: 40px;
+    max-height: none;
+  }
+
+  .experience-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 32px;
+    gap: 16px;
+  }
+
+  .experience-number {
+    width: auto;
+    justify-content: center;
+
+    .number {
+      font-size: 3rem;
+    }
+
+    .unit {
+      font-size: 1rem;
+    }
+  }
+
+  .experience-details {
+    margin-left: 0;
+    top: 0;
+
+    .subtitle {
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .description {
+      font-size: 0.875rem;
+      line-height: 1.4;
+    }
+  }
+
+  .download-button {
+    width: 100%;
+    max-width: 100%;
+    height: 48px;
+
+    .button-text {
+      font-size: 1rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .about-container {
+    padding-top: 32px;
+    padding-bottom: 48px;
+  }
+
+  .about-title {
+    font-size: 2rem;
+    margin-bottom: 24px;
+  }
+
+  .about-content {
+    gap: 32px;
+  }
+
+  .portrait-section {
+    max-width: 300px;
+  }
+
+  .images-container {
+    height: 350px;
+  }
+
+  .trail-img {
+    width: 100px;
+    height: 350px;
+
+    &--2 {
+      left: 50px;
+    }
+
+    &--3 {
+      left: 100px;
+    }
+  }
+
+  .portrait-img {
+    width: 180px;
+    height: 300px;
+  }
+
+  .experience-section {
+    gap: 32px;
+  }
+
+  .experience-item {
+    margin-bottom: 24px;
+    gap: 12px;
+  }
+
+  .experience-number {
+    .number {
+      font-size: 2.5rem;
+    }
+
+    .unit {
+      font-size: 0.875rem;
+    }
+  }
+
+  .experience-details {
+    .subtitle {
+      font-size: 0.875rem;
+      margin-bottom: 6px;
+    }
+
+    .description {
+      font-size: 0.75rem;
+    }
+  }
+
+  .download-button {
+    height: 44px;
+
+    .button-text {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Ultrawide 34" (3440px) - увеличение в 2.4 раза
+@media (min-width: 3440px) {
+  .about-container {
+    width: 3440px;
+    padding-top: 192px;
+    padding-bottom: 312px;
+  }
+
+  .about-title {
+    font-size: 192px;
+    letter-spacing: -4.8px;
+    line-height: 192.2px;
+    margin-bottom: 115px;
+    margin-left: 96px;
+  }
+
+  .portrait-section {
+    width: 1630px;
+    height: 1339px;
+    margin-left: 96px;
+  }
+
+  .images-container {
+    width: 1709px;
+    height: 1409px;
+    top: -70px;
+    left: -70px;
+  }
+
+  .trail-img {
+    width: 958px;
+    height: 1409px;
+
+    &--2 {
+      left: 276px;
+    }
+
+    &--3 {
+      left: 538px;
+    }
+  }
+
+  .portrait-img {
+    width: 840px;
+    height: 1349px;
+    top: 60px;
+    left: 869px;
+  }
+
+  .experience-section {
+    width: 1174px;
+    gap: 206px;
+    max-height: 1200px;
+  }
+
+  .experience-item {
+    margin-bottom: 120px;
+  }
+
+  .experience-number {
+    gap: 19px;
+    width: 276px;
+
+    .number {
+      font-size: 144px;
+    }
+
+    .unit {
+      font-size: 43px;
+    }
+  }
+
+  .experience-details {
+    margin-left: 106px;
+    top: 77px;
+
+    .subtitle {
+      font-size: 38px;
+      margin-bottom: 36px;
+    }
+
+    .description {
+      font-size: 38px;
+      line-height: 50px;
+    }
+  }
+
+  .download-button {
+    width: 1178px;
+    height: 137px;
+
+    .button-text {
+      font-size: 43px;
+    }
+  }
+}
+
+// Ultrawide 32" 4K (3840px) - увеличение в 2.67 раза
+@media (min-width: 3840px) {
+  .about-container {
+    width: 3840px;
+    padding-top: 214px;
+    padding-bottom: 347px;
+  }
+
+  .about-title {
+    font-size: 214px;
+    letter-spacing: -5.3px;
+    line-height: 214.3px;
+    margin-bottom: 128px;
+    margin-left: 107px;
+  }
+
+  .portrait-section {
+    width: 1813px;
+    height: 1489px;
+    margin-left: 107px;
+  }
+
+  .images-container {
+    width: 1901px;
+    height: 1567px;
+    top: -77px;
+    left: -77px;
+  }
+
+  .trail-img {
+    width: 1066px;
+    height: 1567px;
+
+    &--2 {
+      left: 307px;
+    }
+
+    &--3 {
+      left: 598px;
+    }
+  }
+
+  .portrait-img {
+    width: 935px;
+    height: 1501px;
+    top: 67px;
+    left: 967px;
+  }
+
+  .experience-section {
+    width: 1306px;
+    gap: 229px;
+    max-height: 1335px;
+  }
+
+  .experience-item {
+    margin-bottom: 134px;
+  }
+
+  .experience-number {
+    gap: 21px;
+    width: 307px;
+
+    .number {
+      font-size: 160px;
+    }
+
+    .unit {
+      font-size: 48px;
+    }
+  }
+
+  .experience-details {
+    margin-left: 117px;
+    top: 85px;
+
+    .subtitle {
+      font-size: 43px;
+      margin-bottom: 40px;
+    }
+
+    .description {
+      font-size: 43px;
+      line-height: 56px;
+    }
+  }
+
+  .download-button {
+    width: 1311px;
+    height: 152px;
+
+    .button-text {
+      font-size: 48px;
+    }
+  }
+}

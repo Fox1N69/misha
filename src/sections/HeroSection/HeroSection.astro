@@ -1,0 +1,184 @@
+---
+import "./HeroSection.scss";
+
+interface ServiceCategory {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+}
+
+const serviceCategories: ServiceCategory[] = [
+    {
+        id: 1,
+        name: "СВАДЬБЫ",
+        slug: "weddings",
+        description:
+            "Профессиональное ведение свадебных торжеств с индивидуальным подходом",
+    },
+    {
+        id: 2,
+        name: "КОРПОРАТИВЫ",
+        slug: "corporate-events",
+        description:
+            "Организация корпоративных мероприятий и деловых праздников",
+    },
+    {
+        id: 3,
+        name: "ЧАСТНЫЕ МЕРОПРИЯТИЯ",
+        slug: "private-events",
+        description: "Ведение частных праздников и семейных торжеств",
+    },
+    {
+        id: 4,
+        name: "СТЕНДАП",
+        slug: "standup",
+        description:
+            "Комедийные стендап выступления и развлекательные программы",
+    },
+];
+---
+
+<section class="hero-section" itemscope itemtype="https://schema.org/Person">
+    <div class="container">
+        <div class="content-wrapper">
+            <div class="tagline">
+                <img
+                    src="/type.svg"
+                    alt="Интеллигентно и смешно - слоган Михаила Колесникова"
+                    width="400"
+                    height="60"
+                />
+            </div>
+
+            <div class="main-content">
+                <header class="header-section">
+                    <h1 class="main-heading" itemprop="name">
+                        <span class="desktop-heading"
+                            >МИХАИЛ&nbsp;&nbsp;К&nbsp;&nbsp;&nbsp;&#8201;ЛЕСНИКОВ</span
+                        >
+                    </h1>
+
+                    <!-- Hidden structured data -->
+                    <meta
+                        itemprop="jobTitle"
+                        content="Ведущий мероприятий, MC, Presenter"
+                    />
+                    <meta
+                        itemprop="description"
+                        content="Профессиональный ведущий мероприятий в России. Специализируется на свадьбах, корпоративных мероприятиях, частных праздниках и стендап выступлениях."
+                    />
+                    <meta
+                        itemprop="url"
+                        content="https://mikhailkolesnikov.ru"
+                    />
+
+                    <nav
+                        class="services-container"
+                        role="navigation"
+                        aria-label="Услуги ведущего"
+                    >
+                        <div class="left-services">
+                            <a
+                                href={`/gallery/${serviceCategories[0].slug}`}
+                                class="service-text"
+                                itemprop="hasOfferCatalog"
+                                itemscope
+                                itemtype="https://schema.org/OfferCatalog"
+                                title={serviceCategories[0].description}
+                                aria-label={serviceCategories[0].description}
+                            >
+                                <meta
+                                    itemprop="name"
+                                    content={serviceCategories[0].name}
+                                />
+                                <meta
+                                    itemprop="description"
+                                    content={serviceCategories[0].description}
+                                />
+                                {serviceCategories[0].name}
+                            </a>
+
+                            <div class="separator" role="presentation"></div>
+
+                            <a
+                                href={`/gallery/${serviceCategories[1].slug}`}
+                                class="service-text"
+                                itemprop="hasOfferCatalog"
+                                itemscope
+                                itemtype="https://schema.org/OfferCatalog"
+                                title={serviceCategories[1].description}
+                                aria-label={serviceCategories[1].description}
+                            >
+                                <meta
+                                    itemprop="name"
+                                    content={serviceCategories[1].name}
+                                />
+                                <meta
+                                    itemprop="description"
+                                    content={serviceCategories[1].description}
+                                />
+                                {serviceCategories[1].name}
+                            </a>
+                        </div>
+
+                        <div class="right-services">
+                            <a
+                                href={`/gallery/${serviceCategories[2].slug}`}
+                                class="service-text"
+                                itemprop="hasOfferCatalog"
+                                itemscope
+                                itemtype="https://schema.org/OfferCatalog"
+                                title={serviceCategories[2].description}
+                                aria-label={serviceCategories[2].description}
+                            >
+                                <meta
+                                    itemprop="name"
+                                    content={serviceCategories[2].name}
+                                />
+                                <meta
+                                    itemprop="description"
+                                    content={serviceCategories[2].description}
+                                />
+                                {serviceCategories[2].name}
+                            </a>
+
+                            <div class="separator" role="presentation"></div>
+
+                            <a
+                                href={`/gallery/${serviceCategories[3].slug}`}
+                                class="service-text"
+                                itemprop="hasOfferCatalog"
+                                itemscope
+                                itemtype="https://schema.org/OfferCatalog"
+                                title={serviceCategories[3].description}
+                                aria-label={serviceCategories[3].description}
+                            >
+                                <meta
+                                    itemprop="name"
+                                    content={serviceCategories[3].name}
+                                />
+                                <meta
+                                    itemprop="description"
+                                    content={serviceCategories[3].description}
+                                />
+                                {serviceCategories[3].name}
+                            </a>
+                        </div>
+                    </nav>
+                </header>
+
+                <img
+                    class="main-image"
+                    alt="Профессиональный ведущий Михаил Колесников - опытный MC для свадеб, корпоративов и частных мероприятий"
+                    src="/person.png"
+                    width="600"
+                    height="800"
+                    loading="eager"
+                    itemprop="image"
+                    fetchpriority="high"
+                />
+            </div>
+        </div>
+    </div>
+</section>

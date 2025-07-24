@@ -1,0 +1,382 @@
+---
+import "./RetroTvSection.scss";
+import type { Locale } from "../../i18n/translations";
+import { getTranslations } from "../../utils/i18n";
+
+interface VideoSource {
+    src: string;
+    type: string;
+}
+
+interface Props {
+    locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+
+const videoSources: VideoSource[] = [
+    {
+        src: "/videos/old.mp4",
+        type: "video/mp4",
+    },
+    {
+        src: "/videos/video1.mp4",
+        type: "video/mp4",
+    },
+    {
+        src: "/standup/standup-video.mp4",
+        type: "video/mp4",
+    },
+];
+---
+
+<section class="retro-tv-section">
+    <div class="section-header">
+        <h1 class="section-title">
+            {
+                t.retrotv.title.split(". ").map((line, idx, arr) => (
+                    <>
+                        {line}
+                        {idx < arr.length - 1 ? <br /> : null}
+                    </>
+                ))
+            }
+        </h1>
+    </div>
+
+    <div class="tv-container">
+        <div class="tv-frame"></div>
+
+        <div class="tv-screen">
+            <div class="video-container">
+                <video
+                    class="retro-video"
+                    autoplay
+                    loop
+                    playsinline
+                    preload="metadata"
+                >
+                    {
+                        videoSources.map((source) => (
+                            <source src={source.src} type={source.type} />
+                        ))
+                    }
+                    {t.retrotv.videoFallback}
+                </video>
+            </div>
+            <div class="static-overlay"></div>
+            <div class="glitch-lines">
+                <div class="glitch-line"></div>
+                <div class="glitch-line"></div>
+                <div class="glitch-line"></div>
+            </div>
+        </div>
+
+        <div class="power-led"></div>
+
+        <div class="video-sources" style="display: none;">
+            {
+                videoSources.map((source, index) => (
+                    <video
+                        class={`channel-video channel-${index + 1}`}
+                        muted
+                        loop
+                        playsinline
+                        preload="metadata"
+                    >
+                        <source src={source.src} type={source.type} />
+                    </video>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<script>
+    function createRandomGlitch(): void {
+        const video = document.querySelector(
+            ".retro-video",
+        ) as HTMLVideoElement;
+        const staticOverlay = document.querySelector(
+            ".static-overlay",
+        ) as HTMLElement;
+
+        if (!video || !staticOverlay) return;
+
+        if (Math.random() < 0.1) {
+            video.style.filter = `
+                sepia(0.4) 
+                contrast(1.4) 
+                brightness(0.7) 
+                saturate(1.3) 
+                hue-rotate(${Math.random() * 30 - 15}deg)
+            `;
+
+            setTimeout(
+                () => {
+                    video.style.filter = `
+                    sepia(0.3) 
+                    contrast(1.2) 
+                    brightness(0.9) 
+                    saturate(1.1)
+                `;
+                },
+                100 + Math.random() * 200,
+            );
+        }
+
+        if (Math.random() < 0.05) {
+            staticOverlay.style.opacity = "0.3";
+            setTimeout(
+                () => {
+                    staticOverlay.style.opacity = "0.1";
+                },
+                150 + Math.random() * 100,
+            );
+        }
+    }
+
+    let currentVolume = 0.5;
+    let currentChannel = 1;
+    let maxChannels = 3;
+    let volumeRotation = 0;
+    let channelRotation = 0;
+    let isAudioEnabled = false;
+    let userInteracted = false;
+
+    function enableAudio(): void {
+        if (!userInteracted) {
+            const video = document.querySelector(
+                ".retro-video",
+            ) as HTMLVideoElement;
+            if (video) {
+                video.muted = false;
+                video.volume = currentVolume;
+                isAudioEnabled = true;
+                userInteracted = true;
+
+                const audioNotification = document.createElement("div");
+                audioNotification.className = "audio-notification";
+                document
+                    .querySelector(".tv-container")
+                    ?.appendChild(audioNotification);
+
+                const hint = document.querySelector(
+                    ".interaction-hint",
+                ) as HTMLElement;
+                if (hint) {
+                    hint.style.opacity = "0";
+                    setTimeout(() => hint.remove(), 500);
+                }
+
+                setTimeout(() => audioNotification.remove(), 3000);
+            }
+        }
+    }
+
+    function handleVolumeControl(): void {
+        const video = document.querySelector(
+            ".retro-video",
+        ) as HTMLVideoElement;
+        const volumeKnob = document.querySelector(
+            '[data-control="volume"]',
+        ) as HTMLElement;
+
+        if (!video || !volumeKnob) return;
+
+        volumeKnob.addEventListener("click", function () {
+            enableAudio();
+
+            volumeRotation += 45;
+            this.style.transform = `scale(1.1) rotate(${volumeRotation}deg)`;
+
+            currentVolume = (volumeRotation % 360) / 360;
+            if (userInteracted) {
+                video.muted = false;
+                video.volume = currentVolume;
+            }
+
+            // Показываем временно уровень громкости в стильном дизайне
+            const volumePercent = Math.round(currentVolume * 100);
+            const volumeDisplay = document.createElement("div");
+            volumeDisplay.className = "volume-display";
+            volumeDisplay.innerHTML = `
+                <div class="display-content">
+                    <div class="display-icon">🔊</div>
+                    <div class="display-text">${volumePercent}%</div>
+                </div>
+            `;
+            document.querySelector(".tv-container")?.appendChild(volumeDisplay);
+
+            setTimeout(() => volumeDisplay.remove(), 1500);
+
+            setTimeout(() => {
+                this.style.transform = `rotate(${volumeRotation}deg)`;
+            }, 200);
+        });
+    }
+
+    function handleChannelControl(): void {
+        const mainVideo = document.querySelector(
+            ".retro-video",
+        ) as HTMLVideoElement;
+        const channelKnob = document.querySelector(
+            '[data-control="channel"]',
+        ) as HTMLElement;
+        const channelNumber = document.querySelector(
+            ".channel-number",
+        ) as HTMLElement;
+        const screen = document.querySelector(".tv-screen") as HTMLElement;
+
+        if (!mainVideo || !channelKnob || !channelNumber || !screen) return;
+
+        channelKnob.addEventListener("click", function () {
+            enableAudio();
+
+            channelRotation += 45;
+            this.style.transform = `scale(1.1) rotate(${channelRotation}deg)`;
+
+            screen.style.filter = "brightness(2) contrast(0)";
+
+            setTimeout(() => {
+                currentChannel = (currentChannel % maxChannels) + 1;
+                channelNumber.textContent = currentChannel.toString();
+
+                const newVideoSource = document.querySelector(
+                    `.channel-${currentChannel}`,
+                ) as HTMLVideoElement;
+
+                if (newVideoSource) {
+                    const wasPlaying = !mainVideo.paused;
+                    const currentTime = mainVideo.currentTime;
+
+                    mainVideo.src = newVideoSource.src;
+                    mainVideo.muted = !userInteracted;
+                    if (userInteracted) {
+                        mainVideo.volume = currentVolume;
+                    }
+
+                    if (wasPlaying) {
+                        mainVideo.play();
+                    }
+                }
+
+                // Показываем номер канала
+                const channelDisplay = document.createElement("div");
+                channelDisplay.className = "channel-display";
+                channelDisplay.textContent = `CH ${currentChannel}`;
+                document
+                    .querySelector(".tv-container")
+                    ?.appendChild(channelDisplay);
+
+                setTimeout(() => channelDisplay.remove(), 2000);
+
+                screen.style.filter = "none";
+            }, 200);
+
+            setTimeout(() => {
+                this.style.transform = `rotate(${channelRotation}deg)`;
+            }, 400);
+        });
+    }
+
+    function initializeControls(): void {
+        handleVolumeControl();
+        handleChannelControl();
+
+        const video = document.querySelector(
+            ".retro-video",
+        ) as HTMLVideoElement;
+
+        if (video) {
+            video.muted = true;
+            video.volume = currentVolume;
+        }
+    }
+
+    function initializePowerControl(): void {
+        const screen = document.querySelector(".tv-screen") as HTMLElement;
+        const video = document.querySelector(
+            ".retro-video",
+        ) as HTMLVideoElement;
+        const powerLed = document.querySelector(".power-led") as HTMLElement;
+
+        if (!screen || !video || !powerLed) return;
+
+        screen.addEventListener("click", function () {
+            enableAudio();
+
+            if (video.paused) {
+                video.play();
+                powerLed.style.background = "#ff4444";
+                powerLed.style.boxShadow = "0 0 15px #ff4444";
+                this.style.filter = "none";
+                this.style.transition = "box-shadow 2s ease-in-out";
+            } else {
+                video.pause();
+                powerLed.style.background = "#444";
+                powerLed.style.boxShadow = "none";
+                this.style.filter = "brightness(0.1)";
+                this.style.boxShadow = `
+                    inset 0 0 30px rgba(0, 0, 0, 0.9),
+                    0 0 5px rgba(72, 72, 72, 0.2)
+                `;
+            }
+        });
+    }
+
+    function initializeLoadEffect(): void {
+        const tvContainer = document.querySelector(
+            ".tv-container",
+        ) as HTMLElement;
+        if (!tvContainer) return;
+
+        tvContainer.style.opacity = "0";
+
+        setTimeout(() => {
+            tvContainer.style.transition = "all 1s ease-out";
+            tvContainer.style.opacity = "1";
+        }, 100);
+    }
+
+    function initializeDynamicGlow(): void {
+        const screen = document.querySelector(".tv-screen") as HTMLElement;
+        if (!screen) return;
+
+        const glowColors = [
+            "rgba(255, 250, 242, 0.4)",
+            "rgba(72, 72, 72, 0.3)",
+            "rgba(3, 14, 18, 0.2)",
+            "rgba(255, 183, 77, 0.3)",
+            "rgba(255, 215, 160, 0.3)",
+        ];
+
+        let currentColorIndex = 0;
+
+        setInterval(() => {
+            const video = document.querySelector(
+                ".retro-video",
+            ) as HTMLVideoElement;
+            if (!video || video.paused) return;
+
+            currentColorIndex = (currentColorIndex + 1) % glowColors.length;
+            const currentColor = glowColors[currentColorIndex];
+
+            screen.style.boxShadow = `
+                inset 0 0 30px rgba(0, 0, 0, 0.9),
+                0 0 20px ${currentColor},
+                0 0 40px ${currentColor.replace("0.4", "0.2").replace("0.3", "0.15").replace("0.2", "0.1")}
+            `;
+        }, 3000);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        initializeControls();
+        initializePowerControl();
+        initializeLoadEffect();
+        initializeDynamicGlow();
+
+        setInterval(createRandomGlitch, 2000 + Math.random() * 3000);
+    });
+</script>

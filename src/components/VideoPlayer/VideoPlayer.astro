@@ -1,0 +1,190 @@
+---
+import "./VideoPlayer.scss";
+
+interface Props {
+    src: string;
+    alt: string;
+    className?: string;
+    itemprop?: string;
+    itemscope?: boolean;
+    itemtype?: string;
+}
+
+const { src, alt, className = "", itemprop, itemscope, itemtype } = Astro.props;
+---
+
+<div 
+    class={`video-player ${className}`}
+    data-video-player
+    {itemprop}
+    {itemscope}
+    {itemtype}
+>
+    <video
+        src={src}
+        class="video-player__video"
+        preload="metadata"
+        aria-label={alt}
+        muted
+    >
+        Ваш браузер не поддерживает видео.
+    </video>
+    
+    <div class="video-player__overlay">
+        <button class="video-player__play-button" aria-label="Воспроизвести/Пауза">
+            <svg class="video-player__play-icon" viewBox="0 0 24 24" fill="none">
+                <path d="M8 5v14l11-7z" fill="currentColor"/>
+            </svg>
+            <svg class="video-player__pause-icon" viewBox="0 0 24 24" fill="none">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/>
+            </svg>
+        </button>
+    </div>
+    
+    <div class="video-player__controls">
+        <div class="video-player__volume-control">
+            <button class="video-player__volume-button" aria-label="Звук">
+                <svg class="video-player__volume-icon volume-on" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" fill="currentColor"/>
+                </svg>
+                <svg class="video-player__volume-icon volume-off" viewBox="0 0 24 24" fill="none">
+                    <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" fill="currentColor"/>
+                </svg>
+            </button>
+            <div class="video-player__volume-slider">
+                <input 
+                    type="range" 
+                    min="0" 
+                    max="100" 
+                    value="50" 
+                    class="video-player__volume-range"
+                    aria-label="Громкость"
+                >
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    class VideoPlayer {
+        private videoElement: HTMLVideoElement;
+        private playButton: HTMLButtonElement;
+        private playIcon: SVGElement;
+        private pauseIcon: SVGElement;
+        private volumeButton: HTMLButtonElement;
+        private volumeSlider: HTMLInputElement;
+        private volumeOnIcon: SVGElement;
+        private volumeOffIcon: SVGElement;
+        private controls: HTMLDivElement;
+        private isPlaying: boolean = false;
+
+        constructor(private container: HTMLDivElement) {
+            this.videoElement = container.querySelector('.video-player__video') as HTMLVideoElement;
+            this.playButton = container.querySelector('.video-player__play-button') as HTMLButtonElement;
+            this.playIcon = container.querySelector('.video-player__play-icon') as SVGElement;
+            this.pauseIcon = container.querySelector('.video-player__pause-icon') as SVGElement;
+            this.volumeButton = container.querySelector('.video-player__volume-button') as HTMLButtonElement;
+            this.volumeSlider = container.querySelector('.video-player__volume-range') as HTMLInputElement;
+            this.volumeOnIcon = container.querySelector('.volume-on') as SVGElement;
+            this.volumeOffIcon = container.querySelector('.volume-off') as SVGElement;
+            this.controls = container.querySelector('.video-player__controls') as HTMLDivElement;
+
+            this.init();
+        }
+
+        private init() {
+            this.videoElement.volume = 0.5;
+            this.updateVolumeIcon();
+            this.updatePlayIcon();
+
+            // Event listeners
+            this.playButton.addEventListener('click', () => this.togglePlay());
+            this.videoElement.addEventListener('click', () => this.togglePlay());
+            this.volumeButton.addEventListener('click', () => this.toggleMute());
+            this.volumeSlider.addEventListener('input', (e) => this.setVolume(e));
+            
+            // Video events
+            this.videoElement.addEventListener('play', () => this.onPlay());
+            this.videoElement.addEventListener('pause', () => this.onPause());
+            this.videoElement.addEventListener('ended', () => this.onEnded());
+
+            // Show/hide controls on hover
+            this.container.addEventListener('mouseenter', () => this.showControls());
+            this.container.addEventListener('mouseleave', () => this.hideControls());
+        }
+
+        private togglePlay() {
+            if (this.isPlaying) {
+                this.videoElement.pause();
+            } else {
+                this.videoElement.play();
+            }
+        }
+
+        private onPlay() {
+            this.isPlaying = true;
+            this.updatePlayIcon();
+        }
+
+        private onPause() {
+            this.isPlaying = false;
+            this.updatePlayIcon();
+        }
+
+        private onEnded() {
+            this.isPlaying = false;
+            this.updatePlayIcon();
+        }
+
+        private updatePlayIcon() {
+            if (this.isPlaying) {
+                this.playIcon.style.display = 'none';
+                this.pauseIcon.style.display = 'block';
+            } else {
+                this.playIcon.style.display = 'block';
+                this.pauseIcon.style.display = 'none';
+            }
+        }
+
+        private toggleMute() {
+            this.videoElement.muted = !this.videoElement.muted;
+            this.updateVolumeIcon();
+        }
+
+        private setVolume(event: Event) {
+            const target = event.target as HTMLInputElement;
+            const volume = parseInt(target.value) / 100;
+            this.videoElement.volume = volume;
+            this.videoElement.muted = volume === 0;
+            this.updateVolumeIcon();
+        }
+
+        private updateVolumeIcon() {
+            if (this.videoElement.muted || this.videoElement.volume === 0) {
+                this.volumeOnIcon.style.display = 'none';
+                this.volumeOffIcon.style.display = 'block';
+            } else {
+                this.volumeOnIcon.style.display = 'block';
+                this.volumeOffIcon.style.display = 'none';
+            }
+        }
+
+        private showControls() {
+            this.controls.style.opacity = '1';
+        }
+
+        private hideControls() {
+            if (!this.isPlaying) {
+                this.controls.style.opacity = '0';
+            }
+        }
+    }
+
+    // Initialize all video players on the page
+    document.addEventListener('DOMContentLoaded', () => {
+        const videoPlayers = document.querySelectorAll<HTMLDivElement>('[data-video-player]');
+        videoPlayers.forEach(player => {
+            new VideoPlayer(player);
+        });
+    });
+</script>

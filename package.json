@@ -1,0 +1,27 @@
+{
+  "name": "project-misha-astro",
+  "version": "0.0.1",
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/react": "^4.3.0",
+    "@astrojs/sitemap": "^3.4.1",
+    "astro": "^5.10.1",
+    "astro-i18n": "^2.2.4",
+    "prettier": "^3.6.1",
+    "prettier-plugin-astro": "^0.14.1",
+    "sass": "^1.89.2",
+    "typescript": "^5.8.3"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node inline-images.js",
+    "build:astro": "astro build",
+    "inline": "node inline-images.js",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "type": "module",
+  "devDependencies": {
+    "html-inline": "^1.2.0"
+  }
+}

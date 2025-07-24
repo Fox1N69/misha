@@ -1,0 +1,190 @@
+---
+import "./HeroSection.scss";
+import type { Locale } from "../../i18n/translations";
+import { getTranslations } from "../../utils/i18n";
+
+interface Props {
+    locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = getTranslations(locale);
+
+interface ServiceCategory {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+}
+
+const serviceCategories: ServiceCategory[] = [
+    {
+        id: 1,
+        name: t.services[0].name,
+        slug: "weddings",
+        description: t.services[0].description,
+    },
+    {
+        id: 2,
+        name: t.services[1].name,
+        slug: "corporate-events",
+        description: t.services[1].description,
+    },
+    {
+        id: 3,
+        name: t.services[2].name,
+        slug: "private-events",
+        description: t.services[2].description,
+    },
+    {
+        id: 4,
+        name: t.services[3].name,
+        slug: "standup",
+        description: t.services[3].description,
+    },
+];
+---
+
+<section class="hero-section" itemscope itemtype="https://schema.org/Person">
+    <div class="container">
+        <div class="content-wrapper">
+            <div class="tagline">
+                <img
+                    src="/type.svg"
+                    alt={t.hero.taglineAlt}
+                    width="400"
+                    height="60"
+                />
+            </div>
+
+            <div class="main-content">
+                <header class="header-section">
+                    <h1 class="main-heading" itemprop="name">
+                        <span class="desktop-heading">{t.hero.desktopName}</span
+                        >
+                        <span class="mobile-heading">{t.hero.mobileName}</span>
+                    </h1>
+
+                    <!-- Hidden structured data -->
+                    <meta itemprop="jobTitle" content={t.hero.metaJobTitle} />
+                    <meta
+                        itemprop="description"
+                        content={t.hero.metaDescription}
+                    />
+                    <meta
+                        itemprop="url"
+                        content={locale === "ru"
+                            ? "https://mikhailkolesnikov.ru"
+                            : "https://mikhailkolesnikov.ru/en"}
+                    />
+
+                    <nav
+                        class="services-container"
+                        role="navigation"
+                        aria-label={t.hero.servicesLabel}
+                    >
+                        <div class="left-services">
+                            <a
+                                href={`/gallery/${serviceCategories[0].slug}`}
+                                class="service-text"
+                                itemprop="hasOfferCatalog"
+                                itemscope
+                                itemtype="https://schema.org/OfferCatalog"
+                                title={serviceCategories[0].description}
+                                aria-label={serviceCategories[0].description}
+                            >
+                                <meta
+                                    itemprop="name"
+                                    content={serviceCategories[0].name}
+                                />
+                                <meta
+                                    itemprop="description"
+                                    content={serviceCategories[0].description}
+                                />
+                                {serviceCategories[0].name}
+                            </a>
+
+                            <div class="separator" role="presentation"></div>
+
+                            <a
+                                href={`/gallery/${serviceCategories[1].slug}`}
+                                class="service-text"
+                                itemprop="hasOfferCatalog"
+                                itemscope
+                                itemtype="https://schema.org/OfferCatalog"
+                                title={serviceCategories[1].description}
+                                aria-label={serviceCategories[1].description}
+                            >
+                                <meta
+                                    itemprop="name"
+                                    content={serviceCategories[1].name}
+                                />
+                                <meta
+                                    itemprop="description"
+                                    content={serviceCategories[1].description}
+                                />
+                                {serviceCategories[1].name}
+                            </a>
+                        </div>
+
+                        <div class="right-services">
+                            <a
+                                href={`/gallery/${serviceCategories[2].slug}`}
+                                class="service-text"
+                                itemprop="hasOfferCatalog"
+                                itemscope
+                                itemtype="https://schema.org/OfferCatalog"
+                                title={serviceCategories[2].description}
+                                aria-label={serviceCategories[2].description}
+                            >
+                                <meta
+                                    itemprop="name"
+                                    content={serviceCategories[2].name}
+                                />
+                                <meta
+                                    itemprop="description"
+                                    content={serviceCategories[2].description}
+                                />
+                                {serviceCategories[2].name}
+                            </a>
+
+                            <div class="separator" role="presentation"></div>
+
+                            <a
+                                href={`/gallery/${serviceCategories[3].slug}`}
+                                class="service-text"
+                                itemprop="hasOfferCatalog"
+                                itemscope
+                                itemtype="https://schema.org/OfferCatalog"
+                                title={serviceCategories[3].description}
+                                aria-label={serviceCategories[3].description}
+                            >
+                                <meta
+                                    itemprop="name"
+                                    content={serviceCategories[3].name}
+                                />
+                                <meta
+                                    itemprop="description"
+                                    content={serviceCategories[3].description}
+                                />
+                                {serviceCategories[3].name}
+                            </a>
+                        </div>
+                    </nav>
+                </header>
+
+                <img
+                    class="main-image"
+                    alt={t.hero.mainImageAlt}
+                    src="/person.png"
+                    width="600"
+                    height="800"
+                    loading="eager"
+                    itemprop="image"
+                    fetchpriority="high"
+                />
+            </div>
+        </div>
+    </div>
+</section>
+

@@ -1,0 +1,357 @@
+---
+import "./ClientSection.scss";
+
+interface Client {
+    id: string;
+    name: string;
+    displayName: string;
+    industry: string;
+    description: string;
+    website?: string;
+    logo?: string;
+    projects?: string[];
+}
+
+const clients: Client[] = [
+    {
+        id: "gazprom",
+        name: "Газпром",
+        displayName: "Газпром",
+        industry: "Нефтегазовая отрасль",
+        description:
+            "Ведение корпоративных мероприятий и праздников для крупнейшей энергетической компании России",
+        website: "https://www.gazprom.ru",
+        projects: [
+            "Корпоративные мероприятия",
+            "Новогодние празднования",
+            "Юбилейные торжества",
+        ],
+    },
+    {
+        id: "sberbank",
+        name: "Сбербанк",
+        displayName: "Сбербанк",
+        industry: "Банковские услуги",
+        description:
+            "Организация и ведение банковских мероприятий и конференций",
+        website: "https://www.sberbank.ru",
+        projects: [
+            "Корпоративные события",
+            "Презентации продуктов",
+            "Награждения сотрудников",
+        ],
+    },
+    {
+        id: "bmw",
+        name: "BMW",
+        displayName: "BMW",
+        industry: "Автомобильная промышленность",
+        description:
+            "Ведение презентаций новых моделей и корпоративных мероприятий BMW",
+        website: "https://www.bmw.ru",
+        projects: [
+            "Презентации автомобилей",
+            "Дилерские мероприятия",
+            "Тест-драйвы",
+        ],
+    },
+    {
+        id: "mercedes",
+        name: "Mercedes-Benz",
+        displayName: "Mercedes",
+        industry: "Автомобильная промышленность",
+        description: "Премиальные мероприятия и презентации Mercedes-Benz",
+        website: "https://www.mercedes-benz.ru",
+        projects: [
+            "Презентации моделей",
+            "VIP мероприятия",
+            "Автосалонные события",
+        ],
+    },
+    {
+        id: "mts",
+        name: "МТС",
+        displayName: "МТС",
+        industry: "Телекоммуникации",
+        description:
+            "Ведение корпоративных мероприятий ведущего телекоммуникационного оператора",
+        website: "https://www.mts.ru",
+        projects: [
+            "Корпоративные праздники",
+            "Презентации услуг",
+            "Конференции",
+        ],
+    },
+    {
+        id: "beeline",
+        name: "Билайн",
+        displayName: "БИЛАЙН",
+        industry: "Телекоммуникации",
+        description: "Организация мероприятий для мобильного оператора Билайн",
+        website: "https://www.beeline.ru",
+        projects: ["Промо-акции", "Корпоративные события", "Запуск продуктов"],
+    },
+    {
+        id: "megafon",
+        name: "МегаФон",
+        displayName: "МЕГАФОН",
+        industry: "Телекоммуникации",
+        description: "Ведение корпоративных и промо мероприятий МегаФон",
+        website: "https://www.megafon.ru",
+        projects: [
+            "Корпоративные мероприятия",
+            "Промо-кампании",
+            "Конференции",
+        ],
+    },
+    {
+        id: "apple",
+        name: "Apple",
+        displayName: "Apple",
+        industry: "Технологии",
+        description: "Премиальные презентации и мероприятия Apple в России",
+        website: "https://www.apple.com/ru",
+        projects: [
+            "Презентации продуктов",
+            "Запуск iPhone",
+            "Корпоративные события",
+        ],
+    },
+];
+---
+
+<section
+    class="clients"
+    role="region"
+    aria-labelledby="clients-title"
+    itemscope
+    itemtype="https://schema.org/Person"
+>
+    <div class="clients__container">
+        <header class="clients__header">
+            <h2
+                class="clients__title"
+                id="clients-title"
+                itemprop="hasCredential"
+                itemscope
+                itemtype="https://schema.org/EducationalOccupationalCredential"
+            >
+                Мои клиенты
+                <meta
+                    itemprop="credentialCategory"
+                    content="Портфолио клиентов"
+                />
+                <meta
+                    itemprop="description"
+                    content="Опыт работы с ведущими российскими и международными компаниями"
+                />
+            </h2>
+            <p class="clients__subtitle" itemprop="description">
+                Моими клиентами становятся и продолжают быть такие компании как
+            </p>
+        </header>
+
+        <div
+            class="clients__marquee-container"
+            itemscope
+            itemtype="https://schema.org/ItemList"
+        >
+            <meta
+                itemprop="name"
+                content="Список клиентов Михаила Колесникова"
+            />
+            <meta
+                itemprop="description"
+                content="Портфолио ведущих компаний, для которых проводились мероприятия"
+            />
+            <meta
+                itemprop="numberOfItems"
+                content={clients.length.toString()}
+            />
+
+            <ul class="clients__list" role="list">
+                <!-- Первый набор логотипов -->
+                {
+                    clients.map((client, index) => (
+                        <li
+                            class="clients__item"
+                            itemprop="itemListElement"
+                            itemscope
+                            itemtype="https://schema.org/Organization"
+                        >
+                            <a
+                                href={`#${client.id}`}
+                                class="clients__logo"
+                                aria-label={`Перейти к проекту ${client.name} - ${client.description}`}
+                                title={`${client.name} - ${client.industry}. ${client.description}`}
+                                itemprop="url"
+                            >
+                                <span itemprop="name">
+                                    {client.displayName}
+                                </span>
+                                <meta
+                                    itemprop="description"
+                                    content={client.description}
+                                />
+                                <meta
+                                    itemprop="industry"
+                                    content={client.industry}
+                                />
+                                {client.website && (
+                                    <meta
+                                        itemprop="sameAs"
+                                        content={client.website}
+                                    />
+                                )}
+                                <meta
+                                    itemprop="position"
+                                    content={(index + 1).toString()}
+                                />
+                            </a>
+                        </li>
+                    ))
+                }
+
+                <!-- Дублированный набор для бесшовной анимации -->
+                {
+                    clients.map((client, index) => (
+                        <li class="clients__item" aria-hidden="true">
+                            <a
+                                href={`#${client.id}`}
+                                class="clients__logo"
+                                aria-label={`Перейти к проекту ${client.name} - ${client.description}`}
+                                title={`${client.name} - ${client.industry}. ${client.description}`}
+                                tabindex="-1"
+                            >
+                                {client.displayName}
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+    </div>
+
+    <!-- Скрытые микроданные для каждого клиента -->
+    <div style="display: none;">
+        {
+            clients.map((client) => (
+                <div
+                    itemscope
+                    itemtype="https://schema.org/WorkPerformed"
+                    id={`work-${client.id}`}
+                >
+                    <meta
+                        itemprop="name"
+                        content={`Мероприятия для ${client.name}`}
+                    />
+                    <meta itemprop="description" content={client.description} />
+                    <div
+                        itemprop="agent"
+                        itemscope
+                        itemtype="https://schema.org/Person"
+                    >
+                        <meta itemprop="name" content="Михаил Колесников" />
+                        <meta
+                            itemprop="jobTitle"
+                            content="Ведущий мероприятий"
+                        />
+                    </div>
+                    <div
+                        itemprop="object"
+                        itemscope
+                        itemtype="https://schema.org/Organization"
+                    >
+                        <meta itemprop="name" content={client.name} />
+                        <meta itemprop="industry" content={client.industry} />
+                        {client.website && (
+                            <meta itemprop="url" content={client.website} />
+                        )}
+                    </div>
+                    {client.projects &&
+                        client.projects.map((project) => (
+                            <meta itemprop="result" content={project} />
+                        ))}
+                </div>
+            ))
+        }
+    </div>
+
+    <!-- JSON-LD структурированные данные для клиентов -->
+    <script type="application/ld+json" is:inline>
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Михаил Колесников",
+            "jobTitle": "Ведущий мероприятий",
+            "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Портфолио клиентов",
+                "description": "Опыт работы с ведущими российскими и международными компаниями",
+                "itemListElement": [
+                    {
+                        "@type": "Offer",
+                        "itemOffered": {
+                            "@type": "Service",
+                            "name": "Корпоративные мероприятия для крупных компаний",
+                            "description": "Ведение мероприятий для Fortune 500 компаний и ведущих российских организаций"
+                        },
+                        "eligibleCustomerType": {
+                            "@type": "BusinessEntityType",
+                            "name": "Крупные корпорации"
+                        }
+                    }
+                ]
+            },
+            "workExample": [
+                {
+                    "@type": "CreativeWork",
+                    "name": "Корпоративные мероприятия для Газпром",
+                    "description": "Ведение корпоративных праздников и торжественных мероприятий",
+                    "genre": "Корпоративное мероприятие",
+                    "creator": {
+                        "@type": "Person",
+                        "name": "Михаил Колесников"
+                    }
+                },
+                {
+                    "@type": "CreativeWork",
+                    "name": "Банковские мероприятия для Сбербанк",
+                    "description": "Организация и ведение финансовых конференций и корпоративных событий",
+                    "genre": "Банковское мероприятие",
+                    "creator": {
+                        "@type": "Person",
+                        "name": "Михаил Колесников"
+                    }
+                },
+                {
+                    "@type": "CreativeWork",
+                    "name": "Автомобильные презентации BMW и Mercedes",
+                    "description": "Премиальные презентации новых моделей автомобилей",
+                    "genre": "Автомобильная презентация",
+                    "creator": {
+                        "@type": "Person",
+                        "name": "Михаил Колесников"
+                    }
+                }
+            ],
+            "alumniOf": [
+                {
+                    "@type": "Organization",
+                    "name": "Газпром",
+                    "description": "Крупнейшая энергетическая компания России"
+                },
+                {
+                    "@type": "Organization",
+                    "name": "Сбербанк",
+                    "description": "Ведущий российский банк"
+                },
+                {
+                    "@type": "Organization",
+                    "name": "BMW",
+                    "description": "Премиальный автопроизводитель"
+                }
+            ]
+        }
+    </script>
+</section>
