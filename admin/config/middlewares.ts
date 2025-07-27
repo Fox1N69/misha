@@ -4,8 +4,7 @@ export default [
     {
         name: 'strapi::cors',
         config: {
-            origin: ['http://localhost:3000', 'https://mikhailkolesnikov.com'],
-            credentials: true,
+            origin: ['http://mishakolesnikov.com', 'http://localhost:3000'],
         },
     },
     'strapi::security',
