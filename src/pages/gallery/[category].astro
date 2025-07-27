@@ -1,21 +1,8 @@
 ---
 import "../../layouts/global.css";
 import VideoPlayer from "../../components/VideoPlayer/VideoPlayer.astro";
-import fs from "fs";
-import path from "path";
 
-export async function getStaticPaths() {
-    return [
-        { params: { category: "weddings" } },
-        { params: { category: "corporate-events" } },
-        { params: { category: "private-events" } },
-        { params: { category: "standup" } },
-        { params: { category: "videos" } },
-        { params: { category: "all" } },
-    ];
-}
-
-const { category } = Astro.params;
+const category: string = Astro.params.category ?? "all";
 
 interface MediaItem {
     src: string;
@@ -27,65 +14,77 @@ interface MediaItem {
     dateCreated?: string;
 }
 
-function getFilesFromDirectory(
-    dirPath: string,
-    extensions: string[],
-): string[] {
+const STRAPI_API = "http://localhost:1337/api";
+const strapiToken = import.meta.env.STRAPI_TOKEN;
+
+async function fetchMediaFromStrapi(category: string): Promise<MediaItem[]> {
     try {
-        const fullPath = path.join(process.cwd(), "public", dirPath);
-        if (!fs.existsSync(fullPath)) {
+        const categoryFilter =
+            category === "all" ? "" : `&filters[category][$eq]=${category}`;
+
+        const res = await fetch(
+            `${STRAPI_API}/gallery-items?populate=*&pagination[limit]=100${categoryFilter}`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${strapiToken}`,
+                },
+            },
+        );
+
+        if (!res.ok) {
+            console.error(`Ошибка HTTP ${res.status}: ${res.statusText}`);
+            throw new Error(`Ошибка загрузки данных из Strapi: ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        if (!data.data || !Array.isArray(data.data)) {
+            console.warn("Неожиданная структура ответа от Strapi:", data);
             return [];
         }
 
-        const files = fs.readdirSync(fullPath);
-        return files
-            .filter((file) => {
-                const ext = path.extname(file).toLowerCase();
-                return extensions.includes(ext);
+        return data.data
+            .filter((item: any) => {
+                return (
+                    item?.media &&
+                    Array.isArray(item.media) &&
+                    item.media.length > 0 &&
+                    item.media[0]?.url
+                );
             })
-            .map((file) => `/${dirPath}/${file}`);
+            .map((item: any) => {
+                const mediaFile = item.media[0];
+                const mediaUrl = mediaFile.url;
+
+                const fullUrl = mediaUrl.startsWith("http")
+                    ? mediaUrl
+                    : `${STRAPI_API.replace("/api", "")}${mediaUrl}`;
+
+                return {
+                    src: fullUrl,
+                    alt: item.altText || item.title || "Медиафайл",
+                    type: item.type || "image",
+                    category: item.category || "other",
+                    description: item.description || "",
+                    eventType: item.eventType || "",
+                    dateCreated: item.dateCreated,
+                };
+            });
     } catch (error) {
-        console.error(`Error reading directory ${dirPath}:`, error);
-        return [];
+        console.error("Ошибка при загрузке медиафайлов:", error);
+
+        if (import.meta.env.PROD) {
+            return [];
+        }
+
+        throw error;
     }
 }
 
-function getFilesFromSubdirectories(
-    basePath: string,
-    subdirs: string[],
-    extensions: string[],
-): { [key: string]: string[] } {
-    const result: { [key: string]: string[] } = {};
+const allMedia = await fetchMediaFromStrapi(category);
 
-    subdirs.forEach((subdir) => {
-        const fullPath = `${basePath}/${subdir}`;
-        result[subdir] = getFilesFromDirectory(fullPath, extensions);
-    });
-
-    return result;
-}
-
-const imageExtensions = [".png", ".jpg", ".jpeg", ".webp", ".gif"];
-const videoExtensions = [".mp4", ".webm", ".mov", ".avi"];
-
-const eventSubdirs = [
-    "standup",
-    "weddings",
-    "corporate-events",
-    "private-events",
-    "all",
-];
-
-const galleryFiles = getFilesFromSubdirectories(
-    "gallery",
-    eventSubdirs,
-    imageExtensions,
-);
-const videoFiles = getFilesFromDirectory("videos", videoExtensions);
-const standupImages = getFilesFromDirectory("standup", imageExtensions);
-const standupVideos = getFilesFromDirectory("standup", videoExtensions);
-
-function getEventTypeByCategory(category: string): string {
+const categoryDisplayName = (() => {
     switch (category) {
         case "weddings":
             return "Свадьба";
@@ -102,92 +101,24 @@ function getEventTypeByCategory(category: string): string {
         default:
             return "Галерея";
     }
+})();
+
+function getDisplayName(cat: string): string {
+    switch (cat) {
+        case "weddings":
+            return "Свадьба";
+        case "corporate-events":
+            return "Корпоративное мероприятие";
+        case "private-events":
+            return "Частное мероприятие";
+        case "standup":
+            return "Стендап комедия";
+        case "videos":
+            return "Видео с мероприятий";
+        default:
+            return "Мероприятие";
+    }
 }
-
-const galleryMedia: MediaItem[] = [];
-Object.entries(galleryFiles).forEach(([cat, files]) => {
-    files.forEach((src, index) => {
-        galleryMedia.push({
-            src,
-            alt: `Фото ${getEventTypeByCategory(cat)} ${index + 1} - ведущий Михаил Колесников`,
-            type: "image" as const,
-            category: cat,
-            description: `Фотография с ${getEventTypeByCategory(cat).toLowerCase()}, демонстрирующая профессиональную работу ведущего`,
-            eventType: getEventTypeByCategory(cat),
-            dateCreated: new Date().toISOString(),
-        });
-    });
-});
-
-let allMedia: MediaItem[] = [];
-
-if (category === "standup") {
-    allMedia = [
-        ...standupImages.map((src, index) => ({
-            src,
-            alt: `Стендап выступление ${index + 1} - комедийное шоу Михаила Колесникова`,
-            type: "image" as const,
-            category: "standup",
-            description: `Фотография со стендап выступления - демонстрация комедийного мастерства`,
-            eventType: "Стендап комедия",
-            dateCreated: new Date().toISOString(),
-        })),
-        ...standupVideos.map((src, index) => ({
-            src,
-            alt: `Стендап видео ${index + 1} - комедийное выступление Михаила Колесникова`,
-            type: "video" as const,
-            category: "standup",
-            description: `Видеозапись стендап выступления - профессиональная комедия`,
-            eventType: "Стендап комедия",
-            dateCreated: new Date().toISOString(),
-        })),
-    ];
-} else if (category === "videos") {
-    allMedia = videoFiles.map((src, index) => ({
-        src,
-        alt: `Видео с мероприятия ${index + 1} - работа ведущего Михаила Колесникова`,
-        type: "video" as const,
-        category: "videos",
-        description: `Видеозапись профессиональной работы ведущего мероприятий`,
-        eventType: "Мероприятие",
-        dateCreated: new Date().toISOString(),
-    }));
-} else if (category === "all") {
-    allMedia = [
-        ...galleryMedia,
-        ...standupImages.map((src, index) => ({
-            src,
-            alt: `Стендап выступление ${index + 1} - комедийное шоу Михаила Колесникова`,
-            type: "image" as const,
-            category: "standup",
-            description: `Фотография со стендап выступления - демонстрация комедийного мастерства`,
-            eventType: "Стендап комедия",
-            dateCreated: new Date().toISOString(),
-        })),
-        ...standupVideos.map((src, index) => ({
-            src,
-            alt: `Стендап видео ${index + 1} - комедийное выступление Михаила Колесникова`,
-            type: "video" as const,
-            category: "standup",
-            description: `Видеозапись стендап выступления - профессиональная комедия`,
-            eventType: "Стендап комедия",
-            dateCreated: new Date().toISOString(),
-        })),
-        ...videoFiles.map((src, index) => ({
-            src,
-            alt: `Видео с мероприятия ${index + 1} - работа ведущего Михаила Колесникова`,
-            type: "video" as const,
-            category: "videos",
-            description: `Видеозапись профессиональной работы ведущего мероприятий`,
-            eventType: "Мероприятие",
-            dateCreated: new Date().toISOString(),
-        })),
-    ];
-} else {
-    allMedia = galleryMedia.filter((item) => item.category === category);
-}
-
-const categoryDisplayName = getEventTypeByCategory(category);
 ---
 
 <!doctype html>
@@ -244,7 +175,7 @@ const categoryDisplayName = getEventTypeByCategory(category);
 
                 <div class="masonry-grid">
                     {
-                        allMedia.map((item, index) => (
+                        allMedia.map((item) => (
                             <figure
                                 class="masonry-item"
                                 data-category={item.category}
@@ -265,7 +196,7 @@ const categoryDisplayName = getEventTypeByCategory(category);
                                 )}
                                 <div class="media-overlay">
                                     <span class="media-category">
-                                        {item.eventType}
+                                        {getDisplayName(item.category)}
                                     </span>
                                 </div>
                             </figure>

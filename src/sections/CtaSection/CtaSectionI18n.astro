@@ -13,10 +13,13 @@ const t = getTranslations(locale);
 
 <section class="cta">
     <div class="cta__container">
-        <!-- <h2 class="cta__title">МИХАИЛ КОЛЕСНИКОВ</h2> -->
         <h2 class="cta__title">{t.cta.title}</h2>
         <div class="cta__content">
-            <form class="cta__form form">
+            <form
+                class="cta__form form"
+                method="post"
+                action="/api/submit-form"
+            >
                 <div class="form__inputs">
                     <div class="form__input-group">
                         <input
@@ -25,6 +28,7 @@ const t = getTranslations(locale);
                             placeholder={t.cta.form.name}
                             id="name"
                             name="name"
+                            required
                         />
                     </div>
                     <div class="form__input-group">
@@ -32,25 +36,26 @@ const t = getTranslations(locale);
                             class="form__input form__select"
                             id="event"
                             name="event"
+                            required
                         >
-                            <option value="" disabled selected
-                                >{t.cta.form.event}</option
-                            >
-                            <option value="wedding"
-                                >{t.cta.form.eventOptions.wedding}</option
-                            >
-                            <option value="corporate"
-                                >{t.cta.form.eventOptions.corporate}</option
-                            >
-                            <option value="private"
-                                >{t.cta.form.eventOptions.private}</option
-                            >
-                            <option value="standup"
-                                >{t.cta.form.eventOptions.standup}</option
-                            >
-                            <option value="other"
-                                >{t.cta.form.eventOptions.other}</option
-                            >
+                            <option value="" disabled selected>
+                                {t.cta.form.event}
+                            </option>
+                            <option value="wedding">
+                                {t.cta.form.eventOptions.wedding}
+                            </option>
+                            <option value="corporate">
+                                {t.cta.form.eventOptions.corporate}
+                            </option>
+                            <option value="private">
+                                {t.cta.form.eventOptions.private}
+                            </option>
+                            <option value="standup">
+                                {t.cta.form.eventOptions.standup}
+                            </option>
+                            <option value="other">
+                                {t.cta.form.eventOptions.other}
+                            </option>
                         </select>
                     </div>
                     <div class="form__input-group">
@@ -60,6 +65,7 @@ const t = getTranslations(locale);
                             placeholder={t.cta.form.city}
                             id="city"
                             name="city"
+                            required
                         />
                     </div>
                     <div class="form__input-group">
@@ -69,6 +75,7 @@ const t = getTranslations(locale);
                             placeholder="+ 7 ___-___-__-__"
                             id="phone"
                             name="phone"
+                            required
                         />
                     </div>
                     <div class="form__input-group">
@@ -77,13 +84,19 @@ const t = getTranslations(locale);
                             placeholder={t.cta.form.description}
                             id="about"
                             name="about"
-                            rows="2"></textarea>
+                            rows="2"
+                            required></textarea>
                     </div>
                 </div>
 
-                <button type="submit" class="form__submit-btn">
+                <button type="submit" class="form__submit-btn" disabled>
                     {t.cta.form.submit}
                 </button>
+
+                <!-- Добавляем индикатор загрузки -->
+                <div class="form__loading" style="display: none;">
+                    Отправка...
+                </div>
             </form>
 
             <div class="cta__bottom">
@@ -97,17 +110,18 @@ const t = getTranslations(locale);
                     <div class="contacts__social social">
                         <a
                             href="https://t.me/mishatmn"
-                            class="social__link social__link--whatsapp"
+                            class="social__link social__link--telegram"
                         >
                             <svg
                                 fill="#FFFFFF"
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 50 50"
-                                class="social__icon social__icon--whatsapp"
-                                ><path
-                                    d="M25,2c12.703,0,23,10.297,23,23S37.703,48,25,48S2,37.703,2,25S12.297,2,25,2z M32.934,34.375	c0.423-1.298,2.405-14.234,2.65-16.783c0.074-0.772-0.17-1.285-0.648-1.514c-0.578-0.278-1.434-0.139-2.427,0.219	c-1.362,0.491-18.774,7.884-19.78,8.312c-0.954,0.405-1.856,0.847-1.856,1.487c0,0.45,0.267,0.703,1.003,0.966	c0.766,0.273,2.695,0.858,3.834,1.172c1.097,0.303,2.346,0.04,3.046-0.395c0.742-0.461,9.305-6.191,9.92-6.693	c0.614-0.502,1.104,0.141,0.602,0.644c-0.502,0.502-6.38,6.207-7.155,6.997c-0.941,0.959-0.273,1.953,0.358,2.351	c0.721,0.454,5.906,3.932,6.687,4.49c0.781,0.558,1.573,0.811,2.298,0.811C32.191,36.439,32.573,35.484,32.934,34.375z"
-                                ></path></svg
+                                class="social__icon social__icon--telegram"
                             >
+                                <path
+                                    d="M25,2c12.703,0,23,10.297,23,23S37.703,48,25,48S2,37.703,2,25S12.297,2,25,2z M32.934,34.375	c0.423-1.298,2.405-14.234,2.65-16.783c0.074-0.772-0.17-1.285-0.648-1.514c-0.578-0.278-1.434-0.139-2.427,0.219	c-1.362,0.491-18.774,7.884-19.78,8.312c-0.954,0.405-1.856,0.847-1.856,1.487c0,0.45,0.267,0.703,1.003,0.966	c0.766,0.273,2.695,0.858,3.834,1.172c1.097,0.303,2.346,0.04,3.046-0.395c0.742-0.461,9.305-6.191,9.92-6.693	c0.614-0.502,1.104,0.141,0.602,0.644c-0.502,0.502-6.38,6.207-7.155,6.997c-0.941,0.959-0.273,1.953,0.358,2.351	c0.721,0.454,5.906,3.932,6.687,4.49c0.781,0.558,1.573,0.811,2.298,0.811C32.191,36.439,32.573,35.484,32.934,34.375z"
+                                ></path>
+                            </svg>
                             <span class="social__text">Telegram</span>
                         </a>
 
@@ -152,12 +166,12 @@ const t = getTranslations(locale);
 </section>
 
 <script define:vars={{ alertMessages: t.cta.alerts }}>
-    // Form validation and submission
     const form = document.querySelector(".cta__form");
     const inputs = document.querySelectorAll(".form__input");
     const phoneInput = document.querySelector(".form__input--phone");
+    const submitBtn = document.querySelector(".form__submit-btn");
+    const loadingIndicator = document.querySelector(".form__loading");
 
-    // Phone mask functionality
     phoneInput?.addEventListener("input", function (e) {
         const target = e.target;
         if (!target) return;
@@ -182,11 +196,10 @@ const t = getTranslations(locale);
         }
 
         target.value = formattedValue;
+        validateForm();
     });
 
-    form?.addEventListener("submit", function (e) {
-        e.preventDefault();
-
+    function validateForm() {
         let allFilled = true;
 
         inputs.forEach((input) => {
@@ -198,17 +211,76 @@ const t = getTranslations(locale);
             }
         });
 
-        if (allFilled) {
-            alert(alertMessages.formSubmitted);
-            form.reset();
-        } else {
+        if (submitBtn) {
+            submitBtn.disabled = !allFilled;
+        }
+
+        return allFilled;
+    }
+
+    inputs.forEach((input) => {
+        input.addEventListener("input", validateForm);
+        input.addEventListener("change", validateForm);
+    });
+
+    validateForm();
+
+    form?.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        if (!validateForm()) {
             alert(alertMessages.fillAllFields);
+            return;
+        }
+
+        // Show loading state
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.style.display = "none";
+        }
+        if (loadingIndicator) {
+            loadingIndicator.style.display = "block";
+        }
+
+        try {
+            const formData = new FormData(form);
+
+            const response = await fetch("/api/submit-form", {
+                method: "post",
+                body: formData,
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert(
+                    alertMessages.formSubmitted || "Форма успешно отправлена!",
+                );
+                form.reset();
+                validateForm(); // Reset validation state
+            } else {
+                console.error("Server error:", result);
+                alert(result.error || "Произошла ошибка при отправке формы");
+            }
+        } catch (error) {
+            console.error("Form submission error:", error);
+            alert(
+                "Произошла ошибка при отправке формы. Проверьте соединение с интернетом.",
+            );
+        } finally {
+            // Hide loading state
+            if (loadingIndicator) {
+                loadingIndicator.style.display = "none";
+            }
+            if (submitBtn) {
+                submitBtn.style.display = "block";
+                submitBtn.disabled = false;
+            }
         }
     });
 
-    // Download button functionality
     const downloadBtn = document.querySelector(".cta__download-btn");
     downloadBtn?.addEventListener("click", function () {
-        alert(alertMessages.downloading);
+        alert(alertMessages.downloading || "Загрузка презентации...");
     });
 </script>
