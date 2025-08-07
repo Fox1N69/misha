@@ -4,6 +4,7 @@ import { detectLocale } from "../utils/i18n";
 
 import HeroI18n from "../sections/HeroSection/HeroI18n.astro";
 import HeroMobileI18n from "../sections/HeroSection/HeroMobileI18n.astro";
+import HeroMobile from "../sections/HeroSection/HeroMobile.astro";
 import AboutI18n from "../sections/AboutSection/AboutI18n.astro";
 import ClientSectionI18n from "../sections/ClientsSection/ClientSectionI18n.astro";
 import TestimonialsI18n from "../sections/Testimonials/TestimonialsI18n.astro";
@@ -24,7 +25,8 @@ const locale = detectLocale(Astro.request);
 
     <!-- Mobile Hero Section -->
     <div class="hero-mobile-wrapper">
-        <HeroMobileI18n locale={locale} />
+        <!-- <HeroMobileI18n locale={locale} /> -->
+        <HeroMobile locale={locale} />
     </div>
 
     <AboutI18n locale={locale} />
