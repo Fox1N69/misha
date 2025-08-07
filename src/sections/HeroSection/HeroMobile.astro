@@ -15,8 +15,8 @@ const dots = [{ position: "left-[117px]" }, { position: "left-[307px]" }];
         <div class="hero-mobile__images">
             <img
                 class="hero-mobile__decoration"
-                alt="Decoration text"
-                src="/decoration--text.png"
+                alt="Интеллигентно и смешно - слоган Михаила Колесникова"
+                src="/type.svg"
             />
             <img
                 class="hero-mobile__person"
@@ -24,11 +24,19 @@ const dots = [{ position: "left-[117px]" }, { position: "left-[307px]" }];
                 src="/person__mobile.png"
             />
         </div>
-        <!-- Header content -->
         <div class="hero-mobile__header">
-            <!-- Name heading -->
             <h1 class="hero-mobile__title">МИХАИЛ КОЛЕСНИКОВ</h1>
-            <!-- Categories section -->
+
+            <meta
+                itemprop="jobTitle"
+                content="Ведущий мероприятий, MC, Presenter"
+            />
+            <meta
+                itemprop="description"
+                content="Профессиональный ведущий мероприятий в России. Специализируется на свадьбах, корпоративных мероприятиях, частных праздниках и стендап выступлениях."
+            />
+            <meta itemprop="url" content="https://mishakolesnikov.com" />
+
             <div class="hero-mobile__categories">
                 {
                     categories.map((category, index) => (

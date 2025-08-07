@@ -105,25 +105,29 @@
 
   &__person {
     position: absolute;
-    width: 78%;
-    height: 100%;
+    width: 382px;
+    height: 654px;
     top: 0;
     left: 0;
     
     @media (max-width: 490px) {
-      width: 79%;
+      left: -5px;
+      top: 5px;
     }
     
     @media (max-width: 414px) {
-      width: 80%;
+      left: -15px;
+      top: 10px;
     }
     
     @media (max-width: 375px) {
-      width: 81%;
+      left: -25px;
+      top: 15px;
     }
     
     @media (max-width: 320px) {
-      width: 82%;
+      left: -35px;
+      top: 20px;
     }
   }
 
