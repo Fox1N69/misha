@@ -104,6 +104,7 @@ $breakpoint-tablet: 768px;
     @include button-reset;
     width: 330px;
     height: 61px;
+    margin-bottom: 50px;
     background-color: $color-text-primary;
     @include font-style(18px, 500, 1.366, $color-bg-primary);
     text-transform: uppercase;

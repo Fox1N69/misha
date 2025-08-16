@@ -6,7 +6,11 @@ import "./CtaSection.scss";
     <div class="cta__container">
         <h2 class="cta__title">МИХАИЛ КОЛЕСНИКОВ</h2>
         <div class="cta__content">
-            <form class="cta__form form">
+            <form
+                class="cta__form form"
+                method="POST"
+                action="/api/send-telegram"
+            >
                 <div class="form__inputs">
                     <div class="form__input-group">
                         <input
@@ -26,11 +30,13 @@ import "./CtaSection.scss";
                             <option value="" disabled selected
                                 >Мероприятие</option
                             >
-                            <option value="wedding">Свадьба</option>
-                            <option value="corporate">Корпоратив</option>
-                            <option value="private">Частное мероприятие</option>
-                            <option value="standup">Стендап</option>
-                            <option value="other">Другое</option>
+                            <option value="Свадьба">Свадьба</option>
+                            <option value="Корпоратив">Корпоратив</option>
+                            <option value="Частное мероприятие"
+                                >Частное мероприятие</option
+                            >
+                            <option value="Стендап">Стендап</option>
+                            <option value="Другое">Другое</option>
                         </select>
                     </div>
                     <div class="form__input-group">
@@ -61,9 +67,8 @@ import "./CtaSection.scss";
                     </div>
                 </div>
 
-                <button type="submit" class="form__submit-btn">
-                    Отправить
-                </button>
+                <button type="submit" class="form__submit-btn">Отправить</button
+                >
             </form>
 
             <div class="cta__bottom">
@@ -166,7 +171,7 @@ import "./CtaSection.scss";
     });
 
     // Form submission
-    form?.addEventListener("submit", function (e: Event) {
+    form?.addEventListener("submit", async function (e: Event) {
         e.preventDefault();
 
         let allFilled = true;
@@ -187,11 +192,26 @@ import "./CtaSection.scss";
             },
         );
 
-        if (allFilled) {
-            alert("Форма отправлена!");
-            form.reset();
-        } else {
+        if (!allFilled) {
             alert("Пожалуйста, заполните все поля");
+            return;
+        }
+
+        try {
+            const formData = new FormData(form);
+            const response = await fetch("/api/send-telegram", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (response.ok) {
+                alert("Форма отправлена!");
+                form.reset();
+            } else {
+                alert("Ошибка при отправке формы. Попробуйте еще раз.");
+            }
+        } catch (error) {
+            alert("Ошибка при отправке формы. Попробуйте еще раз.");
         }
     });
 

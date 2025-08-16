@@ -11,6 +11,7 @@ import TestimonialsI18n from "../sections/Testimonials/TestimonialsI18n.astro";
 import FeaturesSectionI18n from "../sections/FeaturesSection/FeaturesSectionI18n.astro";
 import RetroTvSectionI18n from "../sections/RetroTvSection/RetroTvSectionI18n.astro";
 import CtaSectionI18n from "../sections/CtaSection/CtaSectionI18n.astro";
+import CtaSection from "../sections/CtaSection/CtaSection.astro";
 import GallerySectionI18n from "../sections/GallerySection/GallerySectionI18n.astro";
 
 // Detect locale for this page
@@ -35,7 +36,8 @@ const locale = detectLocale(Astro.request);
     <TestimonialsI18n locale={locale} />
     <RetroTvSectionI18n locale={locale} />
     <GallerySectionI18n locale={locale} />
-    <CtaSectionI18n locale={locale} />
+    <!-- <CtaSectionI18n locale={locale} /> -->
+    <CtaSection locale={locale} />
 </I18nLayout>
 
 <style>
