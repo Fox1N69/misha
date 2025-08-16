@@ -10,6 +10,15 @@ export const POST: APIRoute = async ({ request }) => {
         const phone = data.get("phone") || "-";
         const about = data.get("about") || "-";
 
+        const createdAt = new Date().toLocaleString("ru-RU", {
+            timeZone: "Asia/Yekaterinburg",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+
         const message = `
  Новая заявка:
  Имя: ${name}
@@ -17,6 +26,7 @@ export const POST: APIRoute = async ({ request }) => {
  Город: ${city}
  Телефон: ${phone}
  Описание: ${about}
+ Дата создания: ${createdAt}
 `;
 
         const TELEGRAM_TOKEN = import.meta.env.TELEGRAM_TOKEN;
